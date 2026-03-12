@@ -33,65 +33,65 @@ void graphics()
 
 }
 
-float frameTime = 0;
+float frame_time = 0;
 
-Uint64 currentTick = SDL_GetPerformanceCounter();
-Uint64 lastTick = 0;
-double deltaTimeTest = 0;
+Uint64 current_tick = SDL_GetPerformanceCounter();
+Uint64 last_tick = 0;
+double delta_time_test = 0;
 
-bool gameRunning = true;
+bool game_running = true;
 
 int main( int argc, char *argv[] ) 
 {
 
-    int windowRefreshRate = window.getRefreshRate();
+    int window_refresh_rate = window.getRefreshRate();
 
-    std::cout << "Window Refresh Rate: " << windowRefreshRate << std::endl;
+    std::cout << "Window Refresh Rate: " << window_refresh_rate << std::endl;
 
-    const float deltaTime = 0.01f;
+    const float delta_time = 0.01f;
     float accumulator = 0.0f;
-    float currentTime = utils::hireTimeInSeconds();
+    float current_time = utils::hireTimeInSeconds();
 
-    while(gameRunning)
+    while(game_running)
     {
-        lastTick = currentTick;
-        currentTick = SDL_GetPerformanceCounter();
-        deltaTimeTest = (double)((currentTick - lastTick)*1000 / (double)SDL_GetPerformanceFrequency() );
+        last_tick = current_tick;
+        current_tick = SDL_GetPerformanceCounter();
+        delta_time_test = (double)((current_tick - last_tick)*1000 / (double)SDL_GetPerformanceFrequency() );
 
-        int startTicks = SDL_GetTicks();
+        int start_ticks = SDL_GetTicks();
 
-        float newTime = utils::hireTimeInSeconds();
-        frameTime = newTime - currentTime;
+        float new_time = utils::hireTimeInSeconds();
+        frame_time = new_time - current_time;
 
-        currentTime = newTime;
+        current_time = new_time;
 
-        accumulator += frameTime;
+        accumulator += frame_time;
 
         //DEBUG - Enable for frame debug
-        //std::cout << newTime << " - " << frameTime << " - " << currentTime << " - " << accumulator << " - " << std::endl;
+        //std::cout << new_time << " - " << frame_time << " - " << current_time << " - " << accumulator << std::endl;
 
         SDL_Event event;
 
-        while (accumulator >= deltaTime)
+        while (accumulator >= delta_time)
         {
             while (SDL_PollEvent(&event))
             {
                 if (event.type == SDL_EVENT_QUIT) 
                 {
-                    gameRunning = false;
+                    game_running = false;
                 }
             }
-            accumulator -= deltaTime;
+            accumulator -= delta_time;
         }
 
         graphics();
         
-        const float alpha = accumulator / deltaTime;
+        const float alpha = accumulator / delta_time;
 
-        int frameTicks = SDL_GetTicks() - startTicks;
+        int frame_ticks = SDL_GetTicks() - start_ticks;
 
-        if (frameTicks < 1000 /  window.getRefreshRate()) {
-            SDL_Delay(1000 / window.getRefreshRate() - frameTicks);
+        if (frame_ticks < 1000 /  window.getRefreshRate()) {
+            SDL_Delay(1000 / window.getRefreshRate() - frame_ticks);
         }
 
     }

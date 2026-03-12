@@ -1,6 +1,10 @@
+SDL_FLAGS := $(shell pkg-config --cflags --libs sdl3)
+
 all:
-	g++ -g *.cpp -o main -I src/include/ `pkg-config --cflags --libs sdl3`
+	mkdir -p build
+	g++ -g *.cpp -o build/main -I src/include/ $(SDL_FLAGS)
 
 clean:
-	rm -f main
-	g++ -g *.cpp -o main -I src/include/ `pkg-config --cflags --libs sdl3`
+	rm -rf build/
+	mkdir -p build
+	g++ -g *.cpp -o build/main -I src/include/ $(SDL_FLAGS)

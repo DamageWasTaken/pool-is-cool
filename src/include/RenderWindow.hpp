@@ -9,7 +9,7 @@ class RenderWindow {
         void cleanUp();
         void clear();
         void display();
-        void changeSize(int width, int height, float scaleRatio);
+        void changeSize(int width, int height, float scale_ratio);
         Vector2f getWindowSize()
         {
             return Vector2f(w, h);

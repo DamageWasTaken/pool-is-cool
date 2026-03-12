@@ -27,9 +27,9 @@ int RenderWindow::getRefreshRate() {
     return mode.refresh_rate;*/
 
 
-	SDL_DisplayID displayID = SDL_GetDisplayForWindow(window);
+	SDL_DisplayID display_id = SDL_GetDisplayForWindow(window);
 
-	const SDL_DisplayMode *mode = SDL_GetDesktopDisplayMode(displayID);
+	const SDL_DisplayMode *mode = SDL_GetDesktopDisplayMode(display_id);
 
     return mode->refresh_rate;
 }
@@ -50,10 +50,10 @@ void RenderWindow::display()
     SDL_RenderPresent(renderer);
 }
 
-void RenderWindow::changeSize(int width, int height, float scaleRatio) 
+void RenderWindow::changeSize(int width, int height, float scale_ratio) 
 {
 	w = width;
 	h = height;
     SDL_SetWindowSize(window, width, height);
-    multiplier = scaleRatio;
+    multiplier = scale_ratio;
 }
