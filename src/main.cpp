@@ -1,5 +1,8 @@
 #include <iostream>
 #include <SDL3/SDL.h>
+#include <SDL3_image/SDL_image.h>
+#include <SDL3_mixer/SDL_mixer.h>
+#include <SDL3_ttf/SDL_ttf.h>
 
 #include "Math.hpp"
 #include "RenderWindow.hpp"
@@ -11,15 +14,18 @@ bool init()
 {
     //Used only for Linux Ubuntu, if not used, no sound will be played
     //SDL_AudioInit("ALSA");
-	if (!SDL_Init(SDL_INIT_VIDEO))
-		std::cout << "SDL_Init HAS FAILED. SDL_ERROR: " << SDL_GetError() << std::endl;
-	/*Needed later
-    if (!(IMG_Init(IMG_INIT_PNG)))
-		std::cout << "IMG_init has failed. Error: " << SDL_GetError() << std::endl;
-    if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
-        std::cout << "SDL mixer has failed. Error: " << Mix_GetError() << std::endl;
-    if (!(TTF_Init() > -1))
-		std::cout << "TTF_init has failed. Error: " << SDL_GetError() << std::endl;*/
+	if (!SDL_Init(SDL_INIT_VIDEO)) {
+		std::cout << "SDL_Init HAS FAILED: " << SDL_GetError() << std::endl;
+        return false;
+    }
+    if (!MIX_Init()) {
+        std::cout << "MIX_Init HAS FAILED: " << SDL_GetError() << std::endl;
+        return false;
+    }
+    if (!TTF_Init()) {
+        std::cout << "TTF_init HAS FAILED: " << SDL_GetError() << std::endl;
+        return false;
+    }
 	std::cout << "Everything has initialized sucessfully!" << std::endl;
     return true;
 }
@@ -30,7 +36,21 @@ RenderWindow window("Pool", WIDTH, HEIGHT);
 
 void graphics()
 {
+    window.clear();
 
+    //Draw calls here
+
+    window.display();
+}
+
+void update()
+{
+    //Update calls here
+}
+
+void input(SDL_Event event)
+{
+    //Input calls here
 }
 
 float frame_time = 0;
@@ -80,10 +100,12 @@ int main( int argc, char *argv[] )
                 {
                     game_running = false;
                 }
+                input(event);
             }
             accumulator -= delta_time;
         }
 
+        update();
         graphics();
         
         const float alpha = accumulator / delta_time;
@@ -98,6 +120,7 @@ int main( int argc, char *argv[] )
 
     window.cleanUp();
     SDL_Quit();
+    TTF_Quit();
 
     return EXIT_SUCCESS;
 }

@@ -18,15 +18,6 @@ RenderWindow::RenderWindow(const char* p_title, int p_w, int p_h)
 }
 
 int RenderWindow::getRefreshRate() {
-    /*int displayIndex = SDL_GetDisplayForWindow( window );
-
-    SDL_DisplayMode mode;
-
-    SDL_GetDisplayMode(displayIndex, 0, &mode);
-
-    return mode.refresh_rate;*/
-
-
 	SDL_DisplayID display_id = SDL_GetDisplayForWindow(window);
 
 	const SDL_DisplayMode *mode = SDL_GetDesktopDisplayMode(display_id);
