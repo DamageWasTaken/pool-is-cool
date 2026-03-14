@@ -6,6 +6,7 @@
 
 #include "Math.hpp"
 #include "RenderWindow.hpp"
+#include "TextureManager.hpp"
 #include "Utils.hpp"
 
 int WIDTH = 1080, HEIGHT = 720;
@@ -34,10 +35,14 @@ bool SDLinit = init();
 
 RenderWindow window("Pool", WIDTH, HEIGHT);
 
+TextureManager textureManager(window);
+
 void graphics()
 {
     window.clear();
 
+    window.render(0, 0, textureManager.get("ball_1_0"));
+    window.renderCenter(WIDTH/2, HEIGHT/2, textureManager.get("ball_cue"));
     //Draw calls here
 
     window.display();

@@ -1,5 +1,6 @@
 #include <iostream>
 #include <SDL3/SDL.h>
+#include <SDL3_image/SDL_image.h>
 
 #include "RenderWindow.hpp"
 
@@ -15,6 +16,57 @@ RenderWindow::RenderWindow(const char* p_title, int p_w, int p_h)
     if ( NULL == window ) {
         std::cout << "Could not create window: " << SDL_GetError( ) << std::endl;
     }
+}
+
+SDL_Texture* RenderWindow::loadTexture(const char* p_filePath) 
+{
+    SDL_Texture* texture = NULL;
+    texture = IMG_LoadTexture(renderer, p_filePath);
+
+    if (texture == NULL) {
+        std::cout << "Failed to load texture: " << SDL_GetError() << std::endl;
+    }
+    return texture;
+}
+
+//Standard render
+void RenderWindow::render(float p_x, float p_y, SDL_Texture* p_tex)
+{
+	SDL_FRect src; 
+	src.x = 0;
+	src.y = 0;
+	src.w;
+	src.h;
+
+    SDL_GetTextureSize(p_tex, &src.w, &src.h);
+
+	SDL_FRect dst;
+	dst.x = p_x;
+	dst.y = p_y;
+	dst.w = src.w;
+	dst.h = src.h;
+
+	SDL_RenderTexture(renderer, p_tex, &src, &dst);
+}
+
+//Renders from the center of the texture, not the top left corner
+void RenderWindow::renderCenter(float p_x, float p_y, SDL_Texture* p_tex)
+{
+	SDL_FRect src;
+	src.x = 0;
+	src.y = 0;
+	src.w;
+	src.h;
+
+	SDL_GetTextureSize(p_tex, &src.w, &src.h);
+
+	SDL_FRect dst;
+	dst.x = (p_x - src.w/2);
+	dst.y = (p_y - src.h/2);
+	dst.w = src.w;
+	dst.h = src.h;
+
+	SDL_RenderTexture(renderer, p_tex, &src, &dst);
 }
 
 int RenderWindow::getRefreshRate() {
@@ -41,6 +93,7 @@ void RenderWindow::display()
     SDL_RenderPresent(renderer);
 }
 
+//Leftover - Currently unused - Unsure if it will be used in the future
 void RenderWindow::changeSize(int width, int height, float scale_ratio) 
 {
 	w = width;
