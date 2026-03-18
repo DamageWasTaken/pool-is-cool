@@ -14,8 +14,26 @@ struct Vector2f
 
 	void print()
 	{
-		std::cout << x << ", " << y << std::endl;
+		std::cout << "{" << x << ", " << y << "}" << std::endl;
 	}
 
 	float x, y;
 };
+
+Vector2f addVector2f(Vector2f v1, Vector2f v2){};
+
+Vector2f subtractVector2f(Vector2f v1, Vector2f v2){};
+
+Vector2f scaleVector2f(Vector2f v1, float scaler){};
+
+Vector2f normalizeVector2f(Vector2f v1){};
+
+float lengthVector2f(Vector2f v1){};
+
+float dotVector2f(Vector2f v1, Vector2f v2){};
+
+float dotVector2f(Vector2f v1, Vector2f v2){};
+
+float angleBetweenVector2f(Vector2f v1, Vector2f v2){};
+
+float crossVector2f(Vector2f v1, Vector2f v2){};
