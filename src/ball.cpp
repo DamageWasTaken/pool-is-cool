@@ -1,0 +1,44 @@
+#include <SDL3/SDL.h>
+#include <SDL3_image/SDL_image.h>
+
+#include "Ball.hpp"
+#include "TextureManager.hpp"
+#include "RenderWindow.hpp"
+
+Ball::Ball(TextureManager& p_texture_manager, float p_x, float p_y, std::string p_texture_name)
+    :position(p_x, p_y), rotation_state(0)
+{
+    std::string texture_name = p_texture_name + "_" + std::to_string(rotation_state);
+    texture = p_texture_manager.get(texture_name);
+}
+
+BallManager::BallManager(TextureManager& p_texture_manager)
+    :s_texture_manager(p_texture_manager)
+{
+    /*s_texture_manager.get("shadow");
+    s_texture_manager.get("shine");
+    s_texture_manager.get("shadow_alt");
+    s_texture_manager.get("shine_alt");*/
+}
+
+void BallManager::addBall(float p_x, float p_y, int ball_number) 
+{
+    if (ball_number > 15)
+        return;
+
+    std::string ball_name = "ball_" + std::to_string(ball_number);
+
+    if (ball_number == 0)
+        ball_name = "ball_cue";
+
+    Ball temp_ball(s_texture_manager, p_x, p_y, ball_name);
+    balls.insert({ball_number, temp_ball});
+}
+
+void BallManager::render(RenderWindow& window)
+{
+    for (auto& pair : balls) {
+        Ball& ball = pair.second;
+        window.render(ball, s_texture_manager.get("shadow"), s_texture_manager.get("shine"));
+    }
+}

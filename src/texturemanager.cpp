@@ -22,9 +22,9 @@ TextureManager::TextureManager(RenderWindow& window)
 
         SDL_Texture* texture = window.loadTexture(file_path.c_str());
 
-        if (true ) {
+        if (texture) {
             textures.insert({file_name, texture});
-            std::cout << "Loaded texture: " << file_path << " | Unique name: " << file_name << std::endl;
+            std::cout << "Loaded texture: " << std::left << std::setw(40) << file_path << " | Unique name: " << file_name << std::endl;
         } else {
             std::cout << "Failed to load texture: " << file_path << std::endl;
             all_textures_loaded = false;

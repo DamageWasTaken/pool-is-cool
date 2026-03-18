@@ -1,7 +1,9 @@
 #pragma once
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
+
 #include "Math.hpp"
+#include "Ball.hpp"
 
 class RenderWindow {
     public:
@@ -9,6 +11,7 @@ class RenderWindow {
         int getRefreshRate();
         SDL_Texture* loadTexture(const char* p_filePath);
         void render(float x, float y, SDL_Texture* p_tex);
+        void render(Ball& ball, SDL_Texture* p_shadow_texture, SDL_Texture* p_shine_texture);
         void renderCenter(float x, float y, SDL_Texture* p_tex);
         void cleanUp();
         void clear();
