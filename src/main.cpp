@@ -38,7 +38,7 @@ void graphics()
 {
     window.clear();
 
-    //Draw calls here
+    draw_physics();
 
     window.display();
 }

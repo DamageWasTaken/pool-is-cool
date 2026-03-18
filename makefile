@@ -1,4 +1,4 @@
-SDL_FLAGS := $(shell pkg-config --cflags --libs sdl3 sdl3-image sdl3-mixer sdl3-ttf)
+SDL_FLAGS := $(shell pkg-config --cflags --libs sdl3 sdl3-image sdl3-ttf sdl3-mixer)
 
 all:
 	mkdir -p build
