@@ -66,6 +66,8 @@ void RenderWindow::render(Ball& ball, SDL_Texture* p_shadow_texture, SDL_Texture
 	dst.w = src.w;
 	dst.h = src.h;
 
+	SDL_SetRenderScale(renderer, 0.20f, 0.20f);
+
 	SDL_RenderTexture(renderer, ball.getTexture(), &src, &dst);
 	SDL_RenderTexture(renderer, p_shadow_texture, &src, &dst);
 	SDL_RenderTexture(renderer, p_shine_texture, &src, &dst);

@@ -3,12 +3,15 @@
 #include <SDL3_image/SDL_image.h>
 #include <SDL3_mixer/SDL_mixer.h>
 #include <SDL3_ttf/SDL_ttf.h>
+#include <cmath>
 
 #include "Math.hpp"
 #include "RenderWindow.hpp"
 #include "TextureManager.hpp"
 #include "Ball.hpp"
 #include "Utils.hpp"
+
+#define EFFECT_CHANGE_RATE 1.0f
 
 int WIDTH = 1080, HEIGHT = 720;
 
@@ -70,8 +73,13 @@ bool game_running = true;
 
 int main( int argc, char *argv[] ) 
 {
-    ball_manager.addBall(300, 300, 1);
-    ball_manager.addBall(600, 600, 0);
+    srand(time(NULL));
+    for (int i = 0; i < 16; i++)
+    {
+        ball_manager.addBall(600+i%5*500, 600+floor(i/5)*500, i);
+    }
+
+    ball_manager.state_change(0);
 
     int window_refresh_rate = window.getRefreshRate();
 
@@ -79,6 +87,7 @@ int main( int argc, char *argv[] )
 
     const float delta_time = 0.01f;
     float accumulator = 0.0f;
+    float effect_accumulator = 0.0f;
     float current_time = utils::hireTimeInSeconds();
 
     while(game_running)
@@ -97,7 +106,7 @@ int main( int argc, char *argv[] )
         accumulator += frame_time;
 
         //DEBUG - Enable for frame debug
-        //std::cout << new_time << " - " << frame_time << " - " << current_time << " - " << accumulator << std::endl;
+        //std::cout << new_time << " - " << frame_time << " - " << current_time << " - " << accumulator << " - " << delta_time_test << std::endl;
 
         SDL_Event event;
 
@@ -116,12 +125,18 @@ int main( int argc, char *argv[] )
 
         update();
         graphics();
-        
+
+        //Effects
+        effect_accumulator += frame_time;
+        if (effect_accumulator >= EFFECT_CHANGE_RATE) {
+            effect_accumulator = 0.0f;
+            ball_manager.state_change(-1);
+        }
         const float alpha = accumulator / delta_time;
 
         int frame_ticks = SDL_GetTicks() - start_ticks;
 
-        if (frame_ticks < 1000 /  window.getRefreshRate()) {
+        if (frame_ticks < 1000 / window.getRefreshRate()) {
             SDL_Delay(1000 / window.getRefreshRate() - frame_ticks);
         }
 
