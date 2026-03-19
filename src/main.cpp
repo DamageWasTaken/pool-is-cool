@@ -44,16 +44,7 @@ void graphics()
 {
     window.clear();
 
-<<<<<<< HEAD
-    draw_physics();
-=======
-<<<<<<< HEAD
     ball_manager.render(window);
-    //Draw calls here
-=======
-    draw_physics();
->>>>>>> 8abf7bb (ADD: Vector2f functions)
->>>>>>> 4e44d89346b252e71a79413c6d50e6660c60ada9
 
     window.display();
 }

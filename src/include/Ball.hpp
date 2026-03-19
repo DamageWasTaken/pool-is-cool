@@ -25,7 +25,7 @@ class Ball {
             return velocity;
         }
 
-        void render(RenderWindow& window);
+        void render(RenderWindow& window, TextureManager& p_texture_manager);
 
     private:
         SDL_Texture* texture;

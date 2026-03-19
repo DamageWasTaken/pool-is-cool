@@ -9,6 +9,7 @@
 TextureManager::TextureManager(RenderWindow& window)
 {
     bool all_textures_loaded = true;
+    int loaded_texture_count = 0;
     std::string path = "res/gfx";
     for (const auto & entry : std::filesystem::recursive_directory_iterator(path)) {
         std::string file_path = entry.path().string();
@@ -25,6 +26,7 @@ TextureManager::TextureManager(RenderWindow& window)
         if (texture) {
             textures.insert({file_name, texture});
             std::cout << "Loaded texture: " << std::left << std::setw(40) << file_path << " | Unique name: " << file_name << std::endl;
+            loaded_texture_count++;
         } else {
             std::cout << "Failed to load texture: " << file_path << std::endl;
             all_textures_loaded = false;
@@ -35,6 +37,7 @@ TextureManager::TextureManager(RenderWindow& window)
     if (all_textures_loaded) {
         std::cout << "All textures have been loaded successfully" << std::endl;
     }
+    std::cout << "Total textures loaded: " << loaded_texture_count << std::endl;
 }
 
 SDL_Texture* TextureManager::get(const std::string& p_name)
