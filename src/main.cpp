@@ -6,6 +6,8 @@
 
 #include "Math.hpp"
 #include "RenderWindow.hpp"
+#include "TextureManager.hpp"
+#include "Ball.hpp"
 #include "Utils.hpp"
 
 int WIDTH = 1080, HEIGHT = 720;
@@ -34,11 +36,24 @@ bool SDLinit = init();
 
 RenderWindow window("Pool", WIDTH, HEIGHT);
 
+TextureManager texture_manager(window);
+
+BallManager ball_manager(texture_manager);
+
 void graphics()
 {
     window.clear();
 
+<<<<<<< HEAD
     draw_physics();
+=======
+<<<<<<< HEAD
+    ball_manager.render(window);
+    //Draw calls here
+=======
+    draw_physics();
+>>>>>>> 8abf7bb (ADD: Vector2f functions)
+>>>>>>> 4e44d89346b252e71a79413c6d50e6660c60ada9
 
     window.display();
 }
@@ -61,8 +76,11 @@ double delta_time_test = 0;
 
 bool game_running = true;
 
+
 int main( int argc, char *argv[] ) 
 {
+    ball_manager.addBall(300, 300, 1);
+    ball_manager.addBall(600, 600, 0);
 
     int window_refresh_rate = window.getRefreshRate();
 
