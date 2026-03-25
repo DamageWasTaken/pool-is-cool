@@ -43,6 +43,11 @@ TextureManager texture_manager(window);
 
 BallManager ball_manager(texture_manager);
 
+Area tabel_area;
+
+PhysicsHandler pyhysics_handler(ball_manager, tabel_area);
+
+
 void graphics()
 {
     window.clear();
@@ -54,7 +59,7 @@ void graphics()
 
 void update()
 {
-    //Update calls here
+    pyhysics_handler.updatePhysics(frame_time); 
 }
 
 void input(SDL_Event event)
@@ -82,6 +87,8 @@ int main( int argc, char *argv[] )
     ball_manager.state_change(0);
 
     int window_refresh_rate = window.getRefreshRate();
+
+    tabel_area = Area(Vector2f(0.0f, 0.0f), Vector2f(WIDTH, HEIGHT));
 
     std::cout << "Window Refresh Rate: " << window_refresh_rate << std::endl;
 

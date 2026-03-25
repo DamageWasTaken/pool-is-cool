@@ -60,7 +60,7 @@ void BallManager::render(RenderWindow& p_window)
         ball.render(p_window, s_texture_manager);
     }
 }
-
+      
 void BallManager::state_change(int p_state = -1)
 {
     for (auto& pair : balls) {

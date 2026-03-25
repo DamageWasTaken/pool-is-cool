@@ -24,7 +24,18 @@ class Ball {
         {
             return velocity;
         }
+
+        void setPosition(Vector2f new_position)
+        {
+            position = new_position; 
+        }
+        void setVelocity( Vector2f new_velocity)
+        {
+            velocity = new_velocity;
+        }
+
         void render(RenderWindow& window, TextureManager& p_texture_manager);
+  
         void change_state(int p_state = -1)
         {
             //-1 state means to just go to the next state
@@ -49,14 +60,18 @@ class Ball {
 class BallManager {
     public:
         BallManager(TextureManager& p_texture_manager);
-        void addBall(float p_x, float p_y, int p_ball_number);
+        void addBall(float p_x, float p_y, int ball_number);
         void render(RenderWindow& p_window);
-        Ball getBall(int p_ball_number)
+        Ball& getBall(int p_ball_number)
         {
-            return balls.at(p_ball_number);
-        }
+             return balls.at(p_ball_number);
+        };
+        int getBallAmount()
+        {
+            return balls.size();
+        };
         void state_change(int p_state); //Changes all balls at once to next state or a given state
-
+  
     private:
         std::unordered_map<int, Ball> balls;
         TextureManager& s_texture_manager;
