@@ -8,12 +8,14 @@
 #include "Math.hpp"
 #include "RenderWindow.hpp"
 #include "TextureManager.hpp"
+#include "Physics.hpp"
 #include "Ball.hpp"
+#include "Area.hpp"
 #include "Utils.hpp"
 
 #define EFFECT_CHANGE_RATE 1.0f
 
-int WIDTH = 1080, HEIGHT = 720;
+static int WIDTH = 1080, HEIGHT = 720;
 
 bool init()
 {
@@ -35,18 +37,25 @@ bool init()
     return true;
 }
 
-bool SDLinit = init();
+static bool SDLinit = init();
 
-RenderWindow window("Pool", WIDTH, HEIGHT);
+static RenderWindow window("Pool", WIDTH, HEIGHT);
 
-TextureManager texture_manager(window);
+static TextureManager texture_manager(window);
 
-BallManager ball_manager(texture_manager);
+static BallManager ball_manager(texture_manager);
 
-Area tabel_area;
+static Area tabel_area(Vector2f(WIDTH/2, HEIGHT/2), WIDTH, HEIGHT);
 
-PhysicsHandler pyhysics_handler(ball_manager, tabel_area);
+static PhysicsHandler physics_handler(ball_manager, tabel_area);
 
+static float frame_time = 0;
+
+static Uint64 current_tick = SDL_GetPerformanceCounter();
+static Uint64 last_tick = 0;
+static double delta_time_test = 0;
+
+static bool game_running = true;
 
 void graphics()
 {
@@ -59,22 +68,13 @@ void graphics()
 
 void update()
 {
-    pyhysics_handler.updatePhysics(frame_time); 
+    physics_handler.updatePhysics(frame_time); 
 }
 
 void input(SDL_Event event)
 {
     //Input calls here
 }
-
-float frame_time = 0;
-
-Uint64 current_tick = SDL_GetPerformanceCounter();
-Uint64 last_tick = 0;
-double delta_time_test = 0;
-
-bool game_running = true;
-
 
 int main( int argc, char *argv[] ) 
 {

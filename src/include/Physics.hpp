@@ -1,18 +1,26 @@
 #pragma once
-#include <Area.hpp>
+
+#include <vector>
+
+#include "Area.hpp"
+
+/*class Quadtree {
+    public:
+        Quadtree();
+        Quadtree& getChild(int child){return Quadtree();}
+    private:
+        std::vector<Quadtree> children;
+};*/
 
 class PhysicsHandler {
-    puplic:
-        PhysicsHandler();  
+    public:
         PhysicsHandler(BallManager& _balls, Area _area);
         
         void updatePhysics(float timestep);
 
     private:
-        Quadtree search_tree;
+        //Quadtree search_tree;
         BallManager balls; 
         Area area; 
 };
 
-class Quadtree {
-};

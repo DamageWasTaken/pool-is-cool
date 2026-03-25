@@ -2,11 +2,6 @@
 #include <Ball.hpp>
 #include <Physics.hpp>
 
-PhysicsHandler::PhysicsHandler()
-: balls(BallManager()), area(Area())
-{
-}
-
 PhysicsHandler::PhysicsHandler(BallManager& _balls, Area _area) 
 : balls(_balls), area(_area)
 {

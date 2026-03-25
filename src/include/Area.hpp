@@ -1,3 +1,4 @@
+#pragma once
 #include <Math.hpp>
 #include <cmath>
 
@@ -35,4 +36,4 @@ struct Area {
     float getArea(){
         return height*width;
     };
-}
+};

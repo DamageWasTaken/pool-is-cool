@@ -70,7 +70,8 @@ class BallManager {
         {
             return balls.size();
         };
-        void state_change(int p_state); //Changes all balls at once to next state or a given state
+        void state_change(int p_state); 
+        //Changes all balls at once to next state or a given state
   
     private:
         std::unordered_map<int, Ball> balls;

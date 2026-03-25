@@ -28,7 +28,7 @@ Vector2f scaleVector2f(Vector2f v1, float scaler)
 
 float lengthVector2f(Vector2f v1)
 {
-    return sqrtf(std::powf(v1.x, 2.0f), std::powf(v1.y, 2.0f)); 
+    return sqrtf(std::powf(v1.x, 2.0f) + std::powf(v1.y, 2.0f)); 
 }
 
 Vector2f normalizeVector2f(Vector2f v1)
