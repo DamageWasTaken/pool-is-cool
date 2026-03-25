@@ -50,25 +50,26 @@ void RenderWindow::render(float p_x, float p_y, SDL_Texture* p_tex)
 }
 
 //Balls are always rendered from the center
+//Balls are always rendered from the center
 void RenderWindow::render(Ball& ball, SDL_Texture* p_shadow_texture, SDL_Texture* p_shine_texture)
 {
-	SDL_FRect src; 
-	src.x = 0;
-	src.y = 0;
-	src.w;
-	src.h;
+    SDL_FRect src; 
+    src.x = 0;
+    src.y = 0;
+    src.w;
+    src.h;
 
     SDL_GetTextureSize(ball.getTexture(), &src.w, &src.h);
 
-	SDL_FRect dst;
-	dst.x = (ball.getPosition().x - src.w/2);
-	dst.y = (ball.getPosition().y - src.h/2);
-	dst.w = src.w;
-	dst.h = src.h;
+    SDL_FRect dst;
+    dst.x = (ball.getPosition().x - src.w/2);
+    dst.y = (ball.getPosition().y - src.h/2);
+    dst.w = src.w;
+    dst.h = src.h;
 
-	SDL_RenderTexture(renderer, ball.getTexture(), &src, &dst);
-	SDL_RenderTexture(renderer, p_shadow_texture, &src, &dst);
-	SDL_RenderTexture(renderer, p_shine_texture, &src, &dst);
+    SDL_RenderTexture(renderer, ball.getTexture(), &src, &dst);
+    SDL_RenderTexture(renderer, p_shadow_texture, &src, &dst);
+    SDL_RenderTexture(renderer, p_shine_texture, &src, &dst);
 }
 
 //Renders from the center of the texture, not the top left corner

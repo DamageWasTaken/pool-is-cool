@@ -27,21 +27,16 @@ Vector2f scaleVector2f(Vector2f v1, float scaler)
 
 float lengthVector2f(Vector2f v1)
 {
-    return std::sqrt(std::pow(v1.x, 2), std::pow(v1, 2)); 
+    return sqrtf(std::powf(v1.x, 2.0f), std::powf(v1.y, 2.0f)); 
 }
 
 Vector2f normalizeVector2f(Vector2f v1)
 {
     float vector_length = lengthVector2f(v1);
     Vector2f normalized_Vector2f;
-    normalized_Vector2f.x = Vector2f.x/vector_length;
-    normalizeVector2f.y = Vector2f.y/vector_length;
-    return normalizeVector2f;
-}
-
-float dotVector2f(Vector2f v1, Vector2f v2)
-{
-    return v1.x*v2.y + v1.y*v2.y;
+    normalized_Vector2f.x = v1.x/vector_length;
+    normalized_Vector2f.y = v1.y/vector_length;
+    return normalized_Vector2f;
 }
 
 float dotVector2f(Vector2f v1, Vector2f v2)
@@ -51,15 +46,15 @@ float dotVector2f(Vector2f v1, Vector2f v2)
 
 float angleBetweenVector2f(Vector2f v1, Vector2f v2)
 {
-    v1_length = lengthVector2f(v1);
-    v2_length = lengthVector2f(v2);
+    float v1_length = lengthVector2f(v1);
+    float v2_length = lengthVector2f(v2);
     return std::acosf(dotVector2f(v1, v2)/(v1_length*v2_length));
 }
 
 float crossVector2f(Vector2f v1, Vector2f v2)
 {
-    v1_length = lengthVector2f(v1);
-    v2_length = lengthVector2f(v2);
+    float v1_length = lengthVector2f(v1);
+    float v2_length = lengthVector2f(v2);
 
     return v1_length*v2_length*std::sinf(angleBetweenVector2f(v1, v2));
 }

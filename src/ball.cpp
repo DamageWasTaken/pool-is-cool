@@ -14,8 +14,21 @@ Ball::Ball(TextureManager& p_texture_manager, float p_x, float p_y, std::string 
     texture = p_texture_manager.get(texture_name);
 }
 
-void Ball::render(){
-    window.render(this, s_texture_manager.get("shadow"), s_texture_manager.get("shine"));
+void Ball::render(RenderWindow& window, TextureManager& p_texture_manager){
+    SDL_Texture *shadow;
+    SDL_Texture *shine;
+
+    if (effect_state%2 == 0)
+        shadow = p_texture_manager.get("shadow");
+    else
+        shadow = p_texture_manager.get("shadow_alt");
+
+    if (std::floor(effect_state/2) == 0)
+        shine = p_texture_manager.get("shine");
+    else
+        shine = p_texture_manager.get("shine_alt");
+
+    window.render(*this, shadow, shine);
 }
 
 BallManager::BallManager(TextureManager& p_texture_manager)
@@ -41,10 +54,10 @@ void BallManager::addBall(float p_x, float p_y, int ball_number)
     balls.insert({ball_number, temp_ball});
 }
 
-void BallManager::render(RenderWindow& window)
+void BallManager::render(RenderWindow& p_window)
 {
     for (auto& pair : balls) {
         Ball& ball = pair.second;
-        ball.render();
+        ball.render(p_window, s_texture_manager);
     }
 }

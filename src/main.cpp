@@ -40,27 +40,21 @@ TextureManager texture_manager(window);
 
 BallManager ball_manager(texture_manager);
 
+Area tabel_area;
+
+PhysicsHandler pyhysics_handler(ball_manager, tabel_area);
+
+
 void graphics()
 {
     window.clear();
-
-<<<<<<< HEAD
-    draw_physics();
-=======
-<<<<<<< HEAD
     ball_manager.render(window);
-    //Draw calls here
-=======
-    draw_physics();
->>>>>>> 8abf7bb (ADD: Vector2f functions)
->>>>>>> 4e44d89346b252e71a79413c6d50e6660c60ada9
-
     window.display();
 }
 
 void update()
 {
-    //Update calls here
+    pyhysics_handler.updatePhysics(frame_time); 
 }
 
 void input(SDL_Event event)
@@ -79,10 +73,9 @@ bool game_running = true;
 
 int main( int argc, char *argv[] ) 
 {
-    ball_manager.addBall(300, 300, 1);
-    ball_manager.addBall(600, 600, 0);
-
     int window_refresh_rate = window.getRefreshRate();
+
+    tabel_area = Area(Vector2f(0.0f, 0.0f), Vector2f(WIDTH, HEIGHT));
 
     std::cout << "Window Refresh Rate: " << window_refresh_rate << std::endl;
 
