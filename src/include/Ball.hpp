@@ -35,12 +35,26 @@ class Ball {
         }
 
         void render(RenderWindow& window, TextureManager& p_texture_manager);
+  
+        void change_state(int p_state = -1)
+        {
+            //-1 state means to just go to the next state
+            if (p_state == -1)
+                p_state = (effect_state + 1) % 4;
+            
+            //Clamp the state between 0 and 4 just in case
+            p_state = std::min(p_state, 4);
+            p_state = std::max(p_state, 0);
+
+            effect_state = p_state;
+        }
 
     private:
         SDL_Texture* texture;
         Vector2f position;
         int rotation_state;
         Vector2f velocity;
+        int effect_state;
 };
 
 class BallManager {
@@ -56,7 +70,8 @@ class BallManager {
         {
             return balls.size();
         };
-
+        void state_change(int p_state); //Changes all balls at once to next state or a given state
+  
     private:
         std::unordered_map<int, Ball> balls;
         TextureManager& s_texture_manager;

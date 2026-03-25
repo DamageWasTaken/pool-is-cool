@@ -1,5 +1,6 @@
-#include "Math.hpp"
 #include <cmath>
+
+#include "Math.hpp"
 
 Vector2f addVector2f(Vector2f v1, Vector2f v2)
 {
@@ -48,7 +49,8 @@ float angleBetweenVector2f(Vector2f v1, Vector2f v2)
 {
     float v1_length = lengthVector2f(v1);
     float v2_length = lengthVector2f(v2);
-    return std::acosf(dotVector2f(v1, v2)/(v1_length*v2_length));
+
+    return acosf(dotVector2f(v1, v2)/(v1_length*v2_length));
 }
 
 float crossVector2f(Vector2f v1, Vector2f v2)
@@ -56,6 +58,6 @@ float crossVector2f(Vector2f v1, Vector2f v2)
     float v1_length = lengthVector2f(v1);
     float v2_length = lengthVector2f(v2);
 
-    return v1_length*v2_length*std::sinf(angleBetweenVector2f(v1, v2));
+    return v1_length*v2_length*sinf(angleBetweenVector2f(v1, v2));
 }
 
