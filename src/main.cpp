@@ -15,7 +15,7 @@
 
 #define EFFECT_CHANGE_RATE 1.0f
 
-static int WIDTH = 1080, HEIGHT = 720;
+static Vector2f window_size = Vector2f(1080, 720);
 
 bool init()
 {
@@ -39,13 +39,15 @@ bool init()
 
 static bool SDLinit = init();
 
-static RenderWindow window("Pool", WIDTH, HEIGHT);
+static RenderWindow window("Pool", window_size.x, window_size.y);
 
 static TextureManager texture_manager(window);
 
 static BallManager ball_manager(texture_manager);
 
-static Area tabel_area(Vector2f(WIDTH/2, HEIGHT/2), WIDTH, HEIGHT);
+static BallUtils ball_utils(texture_manager, window_size);
+
+static Area tabel_area(Vector2f(window_size.x/2, window_size.y/2), window_size.x, window_size.y);
 
 static PhysicsHandler physics_handler(ball_manager, tabel_area);
 
@@ -57,38 +59,138 @@ static double delta_time_test = 0;
 
 static bool game_running = true;
 
+static int game_state = PLAYING;
+
 void graphics()
 {
     window.clear();
 
-    ball_manager.render(window);
+    const Vector2f screen_size = window.getWindowSize();
+    const Vector2f table_center = Vector2f(screen_size.x/2, screen_size.y/2);
+
+    switch (game_state)
+    {
+    case MENU:
+        // Render menu
+
+        break;
+
+    case PLAYING:
+        // Render game
+        
+        ball_utils.render(window);
+
+        /*
+        window.renderCenter(screen_size.x-30, 30, texture_manager.get("ball_cue_-1"),2);
+        window.renderCenter(screen_size.x-30, 30, texture_manager.get("ball_dot"),2);
+        */
+
+        window.renderCenter(table_center.x, table_center.y, texture_manager.get("pool_table"));
+
+        ball_manager.render(window);
+        
+        break;
+
+    case PAUSED:
+        // Render pause screen
+
+        break;
+    
+    default:
+        break;
+    }
 
     window.display();
 }
 
 void update()
 {
-    physics_handler.updatePhysics(frame_time); 
+    switch (game_state)
+    {
+    case MENU:
+        // Update menu
+
+        break;
+
+    case PLAYING:
+        // Update game
+        physics_handler.updatePhysics(frame_time); 
+        break;
+
+    case PAUSED:
+        // Update pause screen
+
+        break;
+
+    default:
+        break;
+    }
 }
 
-void input(SDL_Event event)
+bool input(SDL_Event event, Vector2f mouse, bool mouse_clicked)
 {
-    //Input calls here
+    bool mouse_down = false;
+    if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN)
+    {
+        mouse_down = true;
+        mouse_clicked = true;
+    }
+
+    switch (game_state)
+    {
+    case MENU:
+        // Check input on menu
+
+        break;
+        
+    case PLAYING:
+        // Check input while playing
+
+        if (mouse_down)
+        {
+            ball_utils.handleMouseInput(mouse);
+        }
+
+        if (event.type == SDL_EVENT_KEY_DOWN)
+        {
+            if (event.key.key == SDLK_R)
+            {
+                ball_utils.setSpin(Vector2f(0.0f, 0.0f));
+            }
+        }
+
+        break;
+
+    case PAUSED:
+        // Check input on pause screen
+
+        break;
+
+    default:
+        break;
+    }
+
+    return mouse_clicked;
 }
 
 int main( int argc, char *argv[] ) 
 {
     srand(time(NULL));
+
+    //window.scaleToScreen();
+
+    window_size = window.getWindowSize();
+
     for (int i = 0; i < 16; i++)
     {
-        ball_manager.addBall(600+i%5*500, 600+floor(i/5)*500, i);
+        ball_manager.addBall(100+i%5*100, 100+floor(i/5)*100, i);
     }
 
     ball_manager.state_change(0);
 
     int window_refresh_rate = window.getRefreshRate();
 
-    tabel_area = Area(Vector2f(0.0f, 0.0f), Vector2f(WIDTH, HEIGHT));
+    tabel_area = Area(Vector2f(0.0f, 0.0f), window_size);
 
     std::cout << "Window Refresh Rate: " << window_refresh_rate << std::endl;
 
@@ -119,13 +221,18 @@ int main( int argc, char *argv[] )
 
         while (accumulator >= delta_time)
         {
+            bool mouse_clicked = false;
+
+            Vector2f mouse;
+            SDL_GetMouseState(&mouse.x, &mouse.y);
+
             while (SDL_PollEvent(&event))
             {
                 if (event.type == SDL_EVENT_QUIT) 
                 {
                     game_running = false;
                 }
-                input(event);
+                mouse_clicked = input(event, mouse, mouse_clicked);
             }
             accumulator -= delta_time;
         }

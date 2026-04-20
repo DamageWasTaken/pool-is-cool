@@ -68,3 +68,34 @@ void BallManager::state_change(int p_state = -1)
         ball.change_state(p_state);
     }
 }
+
+
+BallUtils::BallUtils(TextureManager& p_texture_manager, Vector2f& p_window_size)
+:spinOffset(0.0f, 0.0f), s_texture_manager(p_texture_manager), window_size(p_window_size)
+{
+    spin_marker_texture = s_texture_manager.get("ball_dot");
+    ball_texture = s_texture_manager.get("ball_cue_-1");
+}
+
+void BallUtils::render(RenderWindow& p_window)
+{
+    Vector2f window_size = p_window.getWindowSize();
+    Vector2f position = Vector2f(window_size.x - utils_border_buffer.x, utils_border_buffer.y);
+    p_window.renderCenter(position.x, position.y, ball_texture, 2);
+    p_window.renderCenter(position.x+spinOffset.x, position.y+spinOffset.y, spin_marker_texture, 2);
+}
+
+void BallUtils::handleMouseInput(Vector2f mouse)
+{
+    float max_offset = 21.0f;
+    float distance_to_center = lengthVector2f(subtractVector2f(mouse, Vector2f(window_size.x - utils_border_buffer.x, utils_border_buffer.y)));
+    if (distance_to_center <= max_offset)
+    {
+        spinOffset = subtractVector2f(mouse, Vector2f(window_size.x - utils_border_buffer.x, utils_border_buffer.y));
+    }
+}
+
+void BallUtils::setSpin(Vector2f new_spin)
+{
+    spinOffset = new_spin;
+}

@@ -23,6 +23,8 @@ TextureManager::TextureManager(RenderWindow& window)
 
         SDL_Texture* texture = window.loadTexture(file_path.c_str());
 
+        SDL_SetTextureScaleMode(texture, SDL_SCALEMODE_PIXELART);
+
         if (texture) {
             textures.insert({file_name, texture});
             std::cout << "Loaded texture: " << std::left << std::setw(40) << file_path << " | Unique name: " << file_name << std::endl;
@@ -51,4 +53,17 @@ SDL_Texture* TextureManager::get(const std::string& p_name)
     std::cout << "Texture not found: " << p_name << std::endl;
 
     return nullptr;
+}
+
+Vector2f TextureManager::getSize(const std::string& p_name)
+{
+    SDL_Texture* s_texture = get(p_name);
+    if (s_texture) {
+        float w, h;
+	    SDL_GetTextureSize(s_texture, &w, &h);
+
+        return Vector2f(w, h);
+    }
+    std::cout << "Texture not found: " << p_name << std::endl;
+    return Vector2f(0.0f, 0.0f);
 }

@@ -77,3 +77,20 @@ class BallManager {
         std::unordered_map<int, Ball> balls;
         TextureManager& s_texture_manager;
 };
+
+class BallUtils {
+    public:
+        BallUtils(TextureManager& p_texture_manager, Vector2f& p_window_size);
+        void render(RenderWindow& window);
+        void handleMouseInput(Vector2f mouse);
+        void setSpin(Vector2f new_spin);
+
+    private:
+        Vector2f spinOffset;
+        Vector2 utils_border_buffer = Vector2(30, 30);
+        Vector2f& window_size;
+        TextureManager& s_texture_manager;
+        SDL_Texture* spin_marker_texture;
+        SDL_Texture* ball_texture;
+
+};
