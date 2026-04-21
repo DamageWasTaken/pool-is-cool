@@ -1,6 +1,7 @@
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
 #include <cmath>
+#include <unordered_set>
 
 #include "Ball.hpp"
 #include "TextureManager.hpp"
@@ -98,4 +99,85 @@ void BallUtils::handleMouseInput(Vector2f mouse)
 void BallUtils::setSpin(Vector2f new_spin)
 {
     spinOffset = new_spin;
+}
+
+
+void BallUtils::initializeBalls(BallManager& ball_manager, Vector2f p_position, float spacing)
+{
+    std::unordered_set<int> ball_numbers;
+
+    while (ball_numbers.size() < BALL_AMOUNT)
+    {
+        int random_number = rand() % BALL_AMOUNT + 1;
+        ball_numbers.insert(random_number);
+    }
+
+    int middle_ball = std::ceil(BALL_AMOUNT / 2.0f);
+    ball_numbers.erase(middle_ball);
+    
+    //Find first even and odd ball numbers to put in the corners
+    int corner_1_ball = 0;
+    int corner_2_ball = 0;
+
+    for (auto it = ball_numbers.begin(); it != ball_numbers.end();)
+    {
+        if (corner_1_ball != 0 && corner_2_ball != 0)
+        {
+            break;
+        }
+        int value = *it;
+        if (value < middle_ball && corner_1_ball == 0)
+        {
+            corner_1_ball = value;
+            it = ball_numbers.erase(it);
+        }
+        else if (value > middle_ball && corner_2_ball == 0)
+        {
+            corner_2_ball = value;
+            it = ball_numbers.erase(it);
+        }
+        else
+        {
+            ++it;
+        }
+    }
+
+    std::cout << corner_1_ball << " - " << corner_2_ball << " - " << middle_ball << std::endl;
+
+    int row_amount = (-1+sqrt(1+8*BALL_AMOUNT))/2;
+
+    float s_x = p_position.x, s_y = p_position.y;
+
+    int middle_ball_position = std::ceil(row_amount/2.0f)-1;
+
+    for (int i = 0; i < row_amount; i++)
+    {
+        float total_row_height = i*spacing;
+        s_y = p_position.y - total_row_height/2;    
+        for (int j = 0; j <= i; j++)
+        {
+            int ball_number = 0;
+
+            //Determine special balls
+            if (i == row_amount-1 && j == 0)
+            {
+                ball_number = corner_1_ball;
+            } else if (i == row_amount-1 && j == row_amount-1)
+            {
+                ball_number = corner_2_ball;
+            } else if (i == middle_ball_position && j == middle_ball_position-1) {
+                ball_number = middle_ball;
+            } else {
+                auto it = ball_numbers.begin();
+                ball_number = *it;
+                it = ball_numbers.erase(it);
+            }
+            
+            ball_manager.addBall(s_x, s_y, ball_number);
+            
+            s_y += spacing;
+        }
+        s_x += spacing;
+    }
+
 }

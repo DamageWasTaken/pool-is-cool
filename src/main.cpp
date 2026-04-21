@@ -181,10 +181,13 @@ int main( int argc, char *argv[] )
 
     window_size = window.getWindowSize();
 
-    for (int i = 0; i < 16; i++)
+    ball_utils.initializeBalls(ball_manager, Vector2f(window_size.x*(79.0f/110.0f)+25.0f, window_size.y/2), 25.0f);
+    ball_manager.addBall(window_size.x*(1-79.0f/110.0f), window_size.y/2, 0);
+
+    /*for (int i = 0; i < 16; i++)
     {
         ball_manager.addBall(100+i%5*100, 100+floor(i/5)*100, i);
-    }
+    }*/
 
     ball_manager.state_change(0);
 

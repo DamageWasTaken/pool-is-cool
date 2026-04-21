@@ -78,12 +78,14 @@ class BallManager {
         TextureManager& s_texture_manager;
 };
 
+//For anything classed as "helper" functions
 class BallUtils {
     public:
         BallUtils(TextureManager& p_texture_manager, Vector2f& p_window_size);
         void render(RenderWindow& window);
         void handleMouseInput(Vector2f mouse);
         void setSpin(Vector2f new_spin);
+        void initializeBalls(BallManager& ball_manager, Vector2f p_position = Vector2f(790.0f, 360.0f), float spacing = 25.0f);
 
     private:
         Vector2f spinOffset;
@@ -92,5 +94,4 @@ class BallUtils {
         TextureManager& s_texture_manager;
         SDL_Texture* spin_marker_texture;
         SDL_Texture* ball_texture;
-
 };
