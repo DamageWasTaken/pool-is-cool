@@ -121,6 +121,29 @@ int RenderWindow::getRefreshRate() {
     return mode->refresh_rate;
 }
 
+void RenderWindow::renderRotated(float x, float y, SDL_Texture* p_tex, float angle, Vector2f rotation_point)
+{
+	SDL_FRect src;
+	src.x = 0;
+	src.y = 0;
+	src.w;
+	src.h;
+
+	SDL_GetTextureSize(p_tex, &src.w, &src.h);
+
+	SDL_FRect dst;
+	dst.x = x;
+	dst.y = y;
+	dst.w = src.w;
+	dst.h = src.h;
+
+	SDL_FPoint point;
+	point.x = rotation_point.x;
+	point.y = rotation_point.y;
+
+	SDL_RenderTextureRotated(renderer, p_tex, &src, &dst, angle, &point, SDL_FLIP_NONE);
+}
+
 void RenderWindow::scaleToScreen()
 {
 	SDL_DisplayID primaryDisplay = SDL_GetPrimaryDisplay();

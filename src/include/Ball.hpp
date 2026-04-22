@@ -12,6 +12,7 @@ class RenderWindow;
 class Ball {
     public:
         Ball(TextureManager& p_texture_manager, float p_x, float p_y, std::string p_texture_name);
+        void render(RenderWindow& window, TextureManager& p_texture_manager);
         SDL_Texture* getTexture()
         {
             return texture;
@@ -24,7 +25,6 @@ class Ball {
         {
             return velocity;
         }
-
         void setPosition(Vector2f new_position)
         {
             position = new_position; 
@@ -33,9 +33,6 @@ class Ball {
         {
             velocity = new_velocity;
         }
-
-        void render(RenderWindow& window, TextureManager& p_texture_manager);
-  
         void change_state(int p_state = -1)
         {
             //-1 state means to just go to the next state
@@ -48,6 +45,14 @@ class Ball {
 
             effect_state = p_state;
         }
+        float getDiameter()
+        {
+            return diameter;
+        }
+        void setDiameter(float new_diameter)
+        {
+            diameter = new_diameter;
+        }
 
     private:
         SDL_Texture* texture;
@@ -55,6 +60,7 @@ class Ball {
         int rotation_state;
         Vector2f velocity;
         int effect_state;
+        float diameter = 25.0f;
 };
 
 class BallManager {
@@ -81,17 +87,47 @@ class BallManager {
 //For anything classed as "helper" functions
 class BallUtils {
     public:
-        BallUtils(TextureManager& p_texture_manager, Vector2f& p_window_size);
+        BallUtils(TextureManager& p_texture_manager, BallManager& p_ball_manager, Vector2f& p_window_size);
         void render(RenderWindow& window);
         void handleMouseInput(Vector2f mouse);
         void setSpin(Vector2f new_spin);
         void initializeBalls(BallManager& ball_manager, Vector2f p_position = Vector2f(790.0f, 360.0f), float spacing = 25.0f);
+        void updateTexture(const char* texture_name, SDL_Texture* new_texture)
+        {
+            if (textures.find(texture_name) != textures.end())
+            {
+                textures[texture_name] = new_texture;
+            } else {
+                std::cout << "Texture not found: " << texture_name << std::endl;
+            }
+        }
+        void updateCue(Vector2f new_position, float new_rotation)
+        {
+            s_cue_position = new_position;
+            s_cue_rotation = new_rotation;
+        }
+        void updateCue(Vector2f new_position)
+        {
+            s_cue_position = new_position;
+        }
+        void updateCue(float new_rotation)
+        {
+            s_cue_rotation = new_rotation;
+        }
+        Vector2f get_cue_position() {
+            return s_cue_position;
+        }
+        float get_cue_rotation() {
+            return s_cue_rotation;
+        }
 
     private:
         Vector2f spinOffset;
         Vector2 utils_border_buffer = Vector2(30, 30);
         Vector2f& window_size;
         TextureManager& s_texture_manager;
-        SDL_Texture* spin_marker_texture;
-        SDL_Texture* ball_texture;
+        std::unordered_map<std::string, SDL_Texture*> textures;
+        Vector2f s_cue_position; // This is expresed as position of the tip
+        float s_cue_rotation; // In degrees, 0 is default orientation so right
+        BallManager& s_ball_manager;
 };

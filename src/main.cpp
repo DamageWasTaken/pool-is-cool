@@ -45,7 +45,7 @@ static TextureManager texture_manager(window);
 
 static BallManager ball_manager(texture_manager);
 
-static BallUtils ball_utils(texture_manager, window_size);
+static BallUtils ball_utils(texture_manager, ball_manager, window_size);
 
 static Area tabel_area(Vector2f(window_size.x/2, window_size.y/2), window_size.x, window_size.y);
 
@@ -78,16 +78,11 @@ void graphics()
     case PLAYING:
         // Render game
         
-        ball_utils.render(window);
-
-        /*
-        window.renderCenter(screen_size.x-30, 30, texture_manager.get("ball_cue_-1"),2);
-        window.renderCenter(screen_size.x-30, 30, texture_manager.get("ball_dot"),2);
-        */
-
         window.renderCenter(table_center.x, table_center.y, texture_manager.get("pool_table"));
-
+        
         ball_manager.render(window);
+        
+        ball_utils.render(window);
         
         break;
 
@@ -105,6 +100,8 @@ void graphics()
 
 void update()
 {
+    Vector2f cueball_position = ball_manager.getBall(0).getPosition();
+
     switch (game_state)
     {
     case MENU:
@@ -114,6 +111,10 @@ void update()
 
     case PLAYING:
         // Update game
+        
+        //Find the cueball
+        ball_utils.updateCue(cueball_position);
+
         physics_handler.updatePhysics(frame_time); 
         break;
 
@@ -130,6 +131,8 @@ void update()
 bool input(SDL_Event event, Vector2f mouse, bool mouse_clicked)
 {
     bool mouse_down = false;
+    float cue_rotation = SDL_atan2f(mouse.y - ball_utils.get_cue_position().y, mouse.x - ball_utils.get_cue_position().x) * 180 / M_PI - 180.0f;
+
     if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN)
     {
         mouse_down = true;
@@ -145,6 +148,8 @@ bool input(SDL_Event event, Vector2f mouse, bool mouse_clicked)
         
     case PLAYING:
         // Check input while playing
+
+        ball_utils.updateCue(cue_rotation);
 
         if (mouse_down)
         {
@@ -177,17 +182,13 @@ int main( int argc, char *argv[] )
 {
     srand(time(NULL));
 
+    //Force max window size
     //window.scaleToScreen();
 
     window_size = window.getWindowSize();
 
     ball_utils.initializeBalls(ball_manager, Vector2f(window_size.x*(79.0f/110.0f)+25.0f, window_size.y/2), 25.0f);
     ball_manager.addBall(window_size.x*(1-79.0f/110.0f), window_size.y/2, 0);
-
-    /*for (int i = 0; i < 16; i++)
-    {
-        ball_manager.addBall(100+i%5*100, 100+floor(i/5)*100, i);
-    }*/
 
     ball_manager.state_change(0);
 
