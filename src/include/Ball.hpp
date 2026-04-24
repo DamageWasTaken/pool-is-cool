@@ -12,6 +12,7 @@ class RenderWindow;
 class Ball {
     public:
         Ball(TextureManager& p_texture_manager, float p_x, float p_y, std::string p_texture_name);
+        void print();
         SDL_Texture* getTexture()
         {
             return texture;
@@ -29,9 +30,14 @@ class Ball {
         {
             position = new_position; 
         }
-        void setVelocity( Vector2f new_velocity)
+
+        void setVelocity(Vector2f new_velocity)
         {
             velocity = new_velocity;
+        }
+        
+        float getRadius(){
+            return radius;
         }
 
         void render(RenderWindow& window, TextureManager& p_texture_manager);
@@ -51,10 +57,12 @@ class Ball {
 
     private:
         SDL_Texture* texture;
+        float radius;
         Vector2f position;
         int rotation_state;
         Vector2f velocity;
         int effect_state;
+
 };
 
 class BallManager {

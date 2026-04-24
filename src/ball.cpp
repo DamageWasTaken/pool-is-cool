@@ -1,8 +1,10 @@
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
 #include <cmath>
+#include <iostream>
 
 #include "Ball.hpp"
+#include "Math.hpp"
 #include "TextureManager.hpp"
 #include "RenderWindow.hpp"
 
@@ -14,6 +16,16 @@ Ball::Ball(TextureManager& p_texture_manager, float p_x, float p_y, std::string 
     std::string texture_name = p_texture_name + "_" + std::to_string(rotation_state);
     texture = p_texture_manager.get(texture_name);
     effect_state = rand() % 4;
+    radius = 12.5; 
+}
+
+void Ball::print(){
+    std::cout << "Velocity: ";
+    velocity.print();
+    std::cout << std::endl;
+    std::cout << "Position: ";
+    position.print();
+    std::cout << std::endl;
 }
 
 void Ball::render(RenderWindow& window, TextureManager& p_texture_manager){
