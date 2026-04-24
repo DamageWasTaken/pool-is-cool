@@ -13,9 +13,12 @@ class RenderWindow {
         void render(float x, float y, SDL_Texture* p_tex);
         void render(Ball& ball, SDL_Texture* p_shadow_texture, SDL_Texture* p_shine_texture);
         void renderCenter(float x, float y, SDL_Texture* p_tex);
+        void renderCenter(float x, float y, SDL_Texture* p_tex, float scale);
+        void renderRotated(float x, float y, SDL_Texture* p_tex, float angle, Vector2f rotation_point);
         void cleanUp();
         void clear();
         void display();
+        void scaleToScreen();
         void changeSize(int width, int height, float scale_ratio);
         Vector2f getWindowSize()
         {

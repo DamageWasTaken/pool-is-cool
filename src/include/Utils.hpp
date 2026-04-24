@@ -10,3 +10,9 @@ namespace utils {
         return t;
     }
 }
+
+enum GameState {
+    MENU = 0,
+    PLAYING = 1,
+    PAUSED = 2
+};

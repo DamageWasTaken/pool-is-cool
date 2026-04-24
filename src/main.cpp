@@ -15,7 +15,7 @@
 
 #define EFFECT_CHANGE_RATE 1.0f
 
-static int WIDTH = 1080, HEIGHT = 720;
+static Vector2f window_size = Vector2f(1080, 720);
 
 
 bool init()
@@ -40,7 +40,7 @@ bool init()
 
 static bool SDLinit = init();
 
-static RenderWindow window("Pool", WIDTH, HEIGHT);
+static RenderWindow window("Pool", window_size.x, window_size.y);
 
 static float width = window.getWindowSize().x;
 static float height = window.getWindowSize().y;
@@ -58,6 +58,8 @@ static std::vector<Vector2f> area_corners = {
 
 static Area tabel_area(area_corners);
 
+static BallUtils ball_utils(texture_manager, ball_manager, window_size);
+
 static PhysicsHandler physics_handler(ball_manager, tabel_area);
 
 static float frame_time = 0;
@@ -68,30 +70,136 @@ static double delta_time_test = 0;
 
 static bool game_running = true;
 
+static int game_state = PLAYING;
+
 void graphics()
 {
     window.clear();
-    ball_manager.render(window);
+
+    const Vector2f screen_size = window.getWindowSize();
+    const Vector2f table_center = Vector2f(screen_size.x/2, screen_size.y/2);
+
+    switch (game_state)
+    {
+    case MENU:
+        // Render menu
+
+        break;
+
+    case PLAYING:
+        // Render game
+        
+        window.renderCenter(table_center.x, table_center.y, texture_manager.get("pool_table"));
+        
+        ball_manager.render(window);
+        
+        ball_utils.render(window);
+        
+        break;
+
+    case PAUSED:
+        // Render pause screen
+
+        break;
+    
+    default:
+        break;
+    }
+
     window.display();
 }
 
 void update()
 {
-    physics_handler.updatePhysics(frame_time); 
+    Vector2f cueball_position = ball_manager.getBall(0).getPosition();
+
+    switch (game_state)
+    {
+    case MENU:
+        // Update menu
+
+        break;
+
+    case PLAYING:
+        // Update game
+        
+        //Find the cueball
+        ball_utils.updateCue(cueball_position);
+
+        physics_handler.updatePhysics(frame_time); 
+        break;
+
+    case PAUSED:
+        // Update pause screen
+
+        break;
+
+    default:
+        break;
+    }
 }
 
-void input(SDL_Event event)
+bool input(SDL_Event event, Vector2f mouse, bool mouse_clicked)
 {
-    //Input calls here
+    bool mouse_down = false;
+    float cue_rotation = SDL_atan2f(mouse.y - ball_utils.get_cue_position().y, mouse.x - ball_utils.get_cue_position().x) * 180 / M_PI - 180.0f;
+
+    if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN)
+    {
+        mouse_down = true;
+        mouse_clicked = true;
+    }
+
+    switch (game_state)
+    {
+    case MENU:
+        // Check input on menu
+
+        break;
+        
+    case PLAYING:
+        // Check input while playing
+
+        ball_utils.updateCue(cue_rotation);
+
+        if (mouse_down)
+        {
+            ball_utils.handleMouseInput(mouse);
+        }
+
+        if (event.type == SDL_EVENT_KEY_DOWN)
+        {
+            if (event.key.key == SDLK_R)
+            {
+                ball_utils.setSpin(Vector2f(0.0f, 0.0f));
+            }
+        }
+
+        break;
+
+    case PAUSED:
+        // Check input on pause screen
+
+        break;
+
+    default:
+        break;
+    }
+
+    return mouse_clicked;
 }
 
 int main( int argc, char *argv[] ) 
 {
     srand(time(NULL));
-    for (int i = 0; i < 16; i++)
-    {
-        ball_manager.addBall(600+i%5*500, 600+floor(i/5)*500, i);
-    }
+
+    //Force max window size
+    //window.scaleToScreen();
+
+    window_size = window.getWindowSize();
+
+    ball_utils.initializeBalls(ball_manager, Vector2f(window_size.x*(79.0f/110.0f)+25.0f, window_size.y/2), 25.0f);
+    ball_manager.addBall(window_size.x*(1-79.0f/110.0f), window_size.y/2, 0);
 
     ball_manager.state_change(0);
 
@@ -126,13 +234,18 @@ int main( int argc, char *argv[] )
 
         while (accumulator >= delta_time)
         {
+            bool mouse_clicked = false;
+
+            Vector2f mouse;
+            SDL_GetMouseState(&mouse.x, &mouse.y);
+
             while (SDL_PollEvent(&event))
             {
                 if (event.type == SDL_EVENT_QUIT) 
                 {
                     game_running = false;
                 }
-                input(event);
+                mouse_clicked = input(event, mouse, mouse_clicked);
             }
             accumulator -= delta_time;
         }
