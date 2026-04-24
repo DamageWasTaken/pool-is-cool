@@ -168,6 +168,7 @@ void RenderWindow::cleanUp()
 
 void RenderWindow::clear()
 {
+    SDL_SetRenderDrawColor(renderer, 242, 242, 242, 255);
     SDL_RenderClear(renderer);
 }
 

@@ -2,6 +2,7 @@
 
 #include <iostream>
 
+
 struct Vector2f
 {
 	Vector2f()
@@ -19,6 +20,34 @@ struct Vector2f
 
 	float x, y;
 };
+
+struct Edge{
+    Edge()
+    :start(Vector2f()), end(Vector2f())
+    {}
+
+    Edge(Vector2f v1, Vector2f v2)
+	:start(v1), end(v2)
+	{}                           
+
+	void print()
+	{
+        std::cout << "start:"; 
+        start.print();
+        std::cout << "end:"; 
+		end.print();
+	}
+
+	Vector2f start, end;
+};
+
+Vector2f anticlockwiseVector2f(Vector2f v1);
+
+Vector2f clockwiseVector2f(Vector2f v1);
+
+Vector2f projectVector2f(Vector2f v1, Vector2f v2);
+
+Vector2f resizeVector2f(Vector2f v1, float size);
 
 struct Vector2
 {
@@ -55,3 +84,4 @@ float dotVector2f(Vector2f v1, Vector2f v2);
 float angleBetweenVector2f(Vector2f v1, Vector2f v2);
 
 float crossVector2f(Vector2f v1, Vector2f v2);
+

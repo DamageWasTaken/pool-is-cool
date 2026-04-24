@@ -17,6 +17,7 @@
 
 static Vector2f window_size = Vector2f(1080, 720);
 
+
 bool init()
 {
     //Used only for Linux Ubuntu, if not used, no sound will be played
@@ -41,13 +42,23 @@ static bool SDLinit = init();
 
 static RenderWindow window("Pool", window_size.x, window_size.y);
 
+static float width = window.getWindowSize().x;
+static float height = window.getWindowSize().y;
+
 static TextureManager texture_manager(window);
 
 static BallManager ball_manager(texture_manager);
 
-static BallUtils ball_utils(texture_manager, ball_manager, window_size);
+static std::vector<Vector2f> area_corners = {
+    Vector2f(0,0), 
+    Vector2f(width, 0),
+    Vector2f(width, height),
+    Vector2f(0, height)
+};
 
-static Area tabel_area(Vector2f(window_size.x/2, window_size.y/2), window_size.x, window_size.y);
+static Area tabel_area(area_corners);
+
+static BallUtils ball_utils(texture_manager, ball_manager, window_size);
 
 static PhysicsHandler physics_handler(ball_manager, tabel_area);
 
@@ -194,8 +205,6 @@ int main( int argc, char *argv[] )
 
     int window_refresh_rate = window.getRefreshRate();
 
-    tabel_area = Area(Vector2f(0.0f, 0.0f), window_size);
-
     std::cout << "Window Refresh Rate: " << window_refresh_rate << std::endl;
 
     const float delta_time = 0.01f;
@@ -257,7 +266,6 @@ int main( int argc, char *argv[] )
         if (frame_ticks < 1000 / window.getRefreshRate()) {
             SDL_Delay(1000 / window.getRefreshRate() - frame_ticks);
         }
-
     }
 
     window.cleanUp();

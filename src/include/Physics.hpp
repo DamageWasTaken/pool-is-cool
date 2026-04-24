@@ -20,7 +20,12 @@ class PhysicsHandler {
 
     private:
         //Quadtree search_tree;
-        BallManager balls; 
+        void updateVelocity(Ball& ball, float timestep);
+        void updatePosition(Ball& ball, float timestep);
+
+        bool checkWallCollision(Ball& ball, Edge edge, float timestep);
+        void handleWallCollision(Ball& ball, float timestep);
+        BallManager& balls; 
         Area area; 
 };
 

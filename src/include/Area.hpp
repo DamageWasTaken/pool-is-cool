@@ -1,39 +1,33 @@
 #pragma once
+#include <vector>
 #include <Math.hpp>
 #include <cmath>
 
 struct Area {
     Area()
-    : ul(Vector2f()), lr(Vector2f()), ll(Vector2f()), 
-      ur(Vector2f()), center(Vector2f()), width(0.0f), height(0.0f)
+    :points(std::vector<Vector2f>{}), edges(std::vector<Edge>{})
     {
     };
 
-    Area(Vector2f UL, Vector2f LR)
-    : ul(UL), lr(LR)
+    Area(std::vector<Vector2f> _points)
+    :points(_points)
     {
-        width = std::fabs(lr.x-ul.x);
-        height = std::fabs(lr.y-ul.y);
-        ll = Vector2f(ul.x, ul.y+height);
-        ur = Vector2f(lr.x, lr.y-height);
-        center = Vector2f(ul.x+width/2, ul.y+height/2);
+        edges.push_back(Edge(points[points.size()-1], points[0]));
+        for(int i = 1; i < points.size(); i++){
+            edges.push_back(Edge(points[i-1], points[i]));
+        }
     };
 
-    Area(Vector2f _center, float _width, float _height)
-    : center(_center), width(_width), height(_height)
+    Area(std::vector<Edge> _edges)
+    :edges(_edges)
     {
-        ul = Vector2f(center.x-width/2, center.y-height/2);
-        ur = Vector2f(center.x+width/2, center.y-height/2);
-        ll = Vector2f(center.x-width/2, center.y+height/2);
-        lr = Vector2f(center.x+width/2, center.y+height/2);
+        for(int i = 0; i < points.size(); i++){
+            points.push_back(edges[i].start);
+        }
     };
-
-    float width, height;
-    Vector2f center;
     
-    Vector2f ul, ur, ll, lr;
-
-    float getArea(){
-        return height*width;
-    };
+    std::vector<Vector2f> points;
+    std::vector<Edge> edges;
 };
+
+bool inArea(Area area, Vector2f pos);
