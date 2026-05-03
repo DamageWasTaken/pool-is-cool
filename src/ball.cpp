@@ -13,6 +13,7 @@
 #define DEFAULT_BALL "ball_cue_-1"
 #define DEFAULT_DOT "ball_dot"
 #define DEFAULT_CUE "pool_cue"
+#define DEFAULT_POWER "cue_power"
 
 Ball::Ball(TextureManager& p_texture_manager, float p_x, float p_y, std::string p_texture_name)
     :position(p_x, p_y), rotation_state(0)
@@ -92,6 +93,8 @@ BallUtils::BallUtils(TextureManager& p_texture_manager, BallManager& p_ball_mana
     textures.insert({"spin_marker", s_texture_manager.get(DEFAULT_DOT)});
     textures.insert({"ball_texture", s_texture_manager.get(DEFAULT_BALL)});
     textures.insert({"cue_texture", s_texture_manager.get(DEFAULT_CUE)});
+    textures.insert({"power_texture", s_texture_manager.get(DEFAULT_POWER)});
+    textures.insert({"power_mask_texture", s_texture_manager.get("cue_power_mask")});
 }
 
 void BallUtils::render(RenderWindow& p_window)
@@ -101,6 +104,8 @@ void BallUtils::render(RenderWindow& p_window)
     Vector2f position = Vector2f(window_size.x - utils_border_buffer.x, utils_border_buffer.y);
     p_window.renderCenter(position.x, position.y, textures["ball_texture"], 2);
     p_window.renderCenter(position.x+spinOffset.x, position.y+spinOffset.y, textures["spin_marker"], 2);
+    p_window.renderCenter(position.x-ball_width*1.5f, position.y, textures["power_texture"], 2);
+    p_window.renderCenter(position.x-ball_width*1.5f, position.y, textures["power_mask_texture"], 2);
     Vector2f cue_size = s_texture_manager.getSize("pool_cue");
     p_window.renderRotated(s_cue_position.x - cue_size.x - ball_width, s_cue_position.y - cue_size.y/2, textures["cue_texture"], s_cue_rotation, Vector2f(cue_size.x+ball_width, cue_size.y/2));
 }

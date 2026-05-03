@@ -144,6 +144,12 @@ void RenderWindow::renderRotated(float x, float y, SDL_Texture* p_tex, float ang
 	SDL_RenderTextureRotated(renderer, p_tex, &src, &dst, angle, &point, SDL_FLIP_NONE);
 }
 
+void RenderWindow::renderMasked(float x, float y, SDL_Texture* p_tex, SDL_Texture* p_mask, float scale, Vector2f mask_offset)
+{
+	
+
+}
+
 void RenderWindow::scaleToScreen()
 {
 	SDL_DisplayID primaryDisplay = SDL_GetPrimaryDisplay();
