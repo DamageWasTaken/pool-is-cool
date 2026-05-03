@@ -50,7 +50,20 @@ void RenderWindow::render(float p_x, float p_y, SDL_Texture* p_tex)
 	SDL_RenderTexture(renderer, p_tex, &src, &dst);
 }
 
-//Balls are always rendered from the center
+void RenderWindow::renderArea(Area& area) {
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+
+    for (Edge& edge : area.edges) {
+        SDL_RenderLine(
+            renderer,
+            (edge.start.x),
+            (edge.start.y),
+            (edge.end.x),
+            (edge.end.y)
+        );
+    }
+}
+
 //Balls are always rendered from the center
 void RenderWindow::render(Ball& ball, SDL_Texture* p_shadow_texture, SDL_Texture* p_shine_texture)
 {

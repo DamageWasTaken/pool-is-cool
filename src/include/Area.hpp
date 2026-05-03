@@ -12,9 +12,8 @@ struct Area {
     Area(std::vector<Vector2f> _points)
     :points(_points)
     {
-        edges.push_back(Edge(points[points.size()-1], points[0]));
-        for(int i = 1; i < points.size(); i++){
-            edges.push_back(Edge(points[i-1], points[i]));
+        for(int i = 0; i < points.size(); i++){
+            edges.push_back(Edge(points[i], points[(i+1) % points.size()]));
         }
     };
 

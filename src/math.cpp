@@ -2,12 +2,15 @@
 
 #include "Math.hpp"
 
-Vector2f anticlockwiseVector2f(Vector2f v1){
-  return Vector2f(v1.x, -v1.y);
-};
-
 Vector2f clockwiseVector2f(Vector2f v1){
-  return Vector2f(-v1.x, v1.y);
+    return Vector2f(v1.y, -v1.x);
+}
+Vector2f anticlockwiseVector2f(Vector2f v1){
+    return Vector2f(-v1.y, v1.x);
+}
+
+Vector2f flipVector2f(Vector2f v1){
+    return Vector2f(-v1.x, -v1.y);
 }
 
 Vector2f projectVector2f(Vector2f v1, Vector2f v2){
@@ -59,7 +62,7 @@ Vector2f normalizeVector2f(Vector2f v1)
 
 float dotVector2f(Vector2f v1, Vector2f v2)
 {
-    return v1.x*v2.y + v1.y*v2.y;
+    return v1.x*v2.x + v1.y*v2.y;
 }
 
 float angleBetweenVector2f(Vector2f v1, Vector2f v2)

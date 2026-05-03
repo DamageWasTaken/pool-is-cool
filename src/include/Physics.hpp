@@ -25,6 +25,10 @@ class PhysicsHandler {
 
         bool checkWallCollision(Ball& ball, Edge edge, float timestep);
         void handleWallCollision(Ball& ball, float timestep);
+            
+        bool checkBallCollision(Ball& ball1, Ball& ball2, float timestep);
+        void handleBallCollision(Ball& ball, float timestep);
+
         BallManager& balls; 
         Area area; 
 };

@@ -78,7 +78,7 @@ class BallManager {
         void render(RenderWindow& p_window);
         Ball& getBall(int p_ball_number)
         {
-             return balls.at(p_ball_number);
+            return balls.at(p_ball_number);
         };
         int getBallAmount()
         {
