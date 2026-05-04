@@ -2,6 +2,12 @@
 
 #include "Math.hpp"
 
+Vector2f rotateVector2f(Vector2f v1, float degrees){
+    float radians = degrees * (M_PI/180.f);
+    return Vector2f(v1.x*std::cosf(radians) - v1.y*std::sinf(radians), 
+                    v1.x*std::sinf(radians) + v1.y*std::cosf(radians));
+};
+
 Vector2f clockwiseVector2f(Vector2f v1){
     return Vector2f(v1.y, -v1.x);
 }

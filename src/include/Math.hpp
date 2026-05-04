@@ -59,6 +59,8 @@ struct Edge{
 	Vector2f start, end;
 };
 
+Vector2f rotateVector2f(Vector2f v1, float rotation);
+
 Vector2f anticlockwiseVector2f(Vector2f v1);
 
 Vector2f clockwiseVector2f(Vector2f v1);

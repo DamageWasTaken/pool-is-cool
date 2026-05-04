@@ -5,6 +5,7 @@
 #include <unordered_map>
 
 #include "Math.hpp"
+#define MINIMAL_VELOCITY 5.f
 
 class TextureManager;
 class RenderWindow;
@@ -104,7 +105,7 @@ class BallUtils {
         {
             for (int i = 0; i < s_ball_manager.getBallAmount(); i++)
             {
-                if (lengthVector2f(s_ball_manager.getBall(i).getVelocity()) > 0.01f)
+                if (lengthVector2f(s_ball_manager.getBall(i).getVelocity()) > MINIMAL_VELOCITY)
                     return true;
             }
             return false;

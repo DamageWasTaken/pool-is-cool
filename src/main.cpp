@@ -78,7 +78,6 @@ static std::vector<Vector2f> area_corners = {
 
 static Area tabel_area(area_corners);
 
-
 static BallUtils ball_utils(texture_manager, ball_manager, window_size);
 
 static PhysicsHandler physics_handler(ball_manager, tabel_area);
@@ -115,8 +114,9 @@ void graphics()
         
         ball_manager.render(window);
 
-        ball_utils.render(window);
-
+        if(!ball_utils.ballsMoving()){
+            ball_utils.render(window);
+        }
         
         break;
 
@@ -149,7 +149,7 @@ void update()
         //Find the cueball
         ball_utils.updateCue(cueball_position);
 
-        //physics_handler.updatePhysics(frame_time); 
+        physics_handler.updatePhysics(frame_time); 
         break;
 
     case PAUSED:
@@ -191,6 +191,12 @@ bool input(SDL_Event event, Vector2f mouse, bool mouse_clicked)
         {
             ball_utils.handleMouseInput(mouse);
             mouse.print();
+
+            if(!ball_utils.ballsMoving()){
+                float power = 500;
+                Vector2f shot_vel = scaleVector2f(rotateVector2f(Vector2f(1, 0), ball_utils.get_cue_rotation()), power); 
+                ball_manager.getBall(0).setVelocity(shot_vel);
+            };
         }
 
         if (event.type == SDL_EVENT_KEY_DOWN)
