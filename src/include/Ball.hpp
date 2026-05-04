@@ -81,7 +81,11 @@ class Ball {
 class BallManager {
     public:
         BallManager(TextureManager& p_texture_manager);
-        void addBall(float p_x, float p_y, int ball_number);
+        void addBall(float p_x, float p_y, int p_ball_number);
+        void removeBall(int p_ball_number);
+        std::unordered_map<int, Ball> getBalls(){
+            return balls;
+        };
         void render(RenderWindow& p_window);
         Ball& getBall(int p_ball_number)
         {

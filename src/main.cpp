@@ -51,6 +51,51 @@ static TextureManager texture_manager(window);
 
 static BallManager ball_manager(texture_manager);
 
+static std::vector<Area> holes = {
+    Area(std::vector<Vector2f>{
+        Vector2f(56, 187),
+        Vector2f(34, 161),
+        Vector2f(68, 133),
+        Vector2f(92, 153),
+        Vector2f(84, 178)
+    }),
+    Area(std::vector<Vector2f>{
+        Vector2f(518, 145),
+        Vector2f(522, 125),
+        Vector2f(555, 123),
+        Vector2f(564, 142),
+        Vector2f(541, 160)
+    }),
+    Area(std::vector<Vector2f>{
+        Vector2f(987, 153),
+        Vector2f(1011, 135),
+        Vector2f(1044, 166),
+        Vector2f(1024, 185),
+        Vector2f(995, 177)
+    }),
+    Area(std::vector<Vector2f>{
+        Vector2f(1025, 536),
+        Vector2f(1039, 550),
+        Vector2f(1007, 583),
+        Vector2f(989, 571),
+        Vector2f(1000, 543)
+    }),
+    Area(std::vector<Vector2f>{
+        Vector2f(562, 578),
+        Vector2f(558, 597),
+        Vector2f(520, 597),
+        Vector2f(516, 579),
+        Vector2f(540, 564)
+    }),
+    Area(std::vector<Vector2f>{
+        Vector2f(92, 568),
+        Vector2f(64, 590),
+        Vector2f(38, 553),
+        Vector2f(57, 537),
+        Vector2f(83, 546)
+    })
+};
+
 static std::vector<Vector2f> area_corners = {
     Vector2f(33, 159),
     Vector2f(67, 129),
@@ -121,6 +166,9 @@ void graphics()
 
         
         window.renderArea(tabel_area);
+        for(Area hole : holes){
+            window.renderArea(hole);
+        }
         break;
 
     case PAUSED:
@@ -138,6 +186,15 @@ void graphics()
 void update()
 {
     Vector2f cueball_position = ball_manager.getBall(0).getPosition();
+
+    //Check Puts
+    for(Area hole : holes){
+        for(auto it = ball_manager.getBalls().begin(); it!=ball_manager.getBalls().end(); it++){
+            if(inArea(hole, it->second.getPosition())){
+                ball_manager.removeBall(it->first);
+            }
+        }
+    }
 
     switch (game_state)
     {
@@ -183,6 +240,7 @@ bool input(SDL_Event event, Vector2f mouse, bool mouse_down)
         mouse_clicked = true;
     }
 
+
     if (event.button.button == SDL_BUTTON_LEFT && event.type == SDL_EVENT_MOUSE_BUTTON_UP)
     {
         mouse_down = false;
@@ -206,6 +264,7 @@ bool input(SDL_Event event, Vector2f mouse, bool mouse_down)
         {
             ball_utils.setInitialMousePosition(mouse);
             ball_utils.handleMouseInput(mouse, mouse_down);
+            mouse.print();
         }
 
         if (event.type == SDL_EVENT_KEY_DOWN)
@@ -214,6 +273,8 @@ bool input(SDL_Event event, Vector2f mouse, bool mouse_down)
             {
                 ball_utils.setSpin(Vector2f(0.0f, 0.0f));
                 ball_utils.toggleSpinLock(false);
+            } else if (event.key.key == SDLK_SPACE){
+                std::cout << std::endl;
             }
         }
 
@@ -273,10 +334,6 @@ int main( int argc, char *argv[] )
 
     while(game_running)
     {
-        for(int i = 0; i < 16; i++){
-            Vector2f ball_center = ball_manager.getBall(i).getPosition();
-            std::cout << "Ball " << i << " in area: " << inArea(tabel_area, ball_center) << std::endl;
-        };
         last_tick = current_tick;
         current_tick = SDL_GetPerformanceCounter();
         delta_time_test = (double)((current_tick - last_tick)*1000 / (double)SDL_GetPerformanceFrequency() );

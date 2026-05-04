@@ -73,6 +73,10 @@ void BallManager::addBall(float p_x, float p_y, int p_ball_number)
     balls.insert({p_ball_number, temp_ball});
 }
 
+void BallManager::removeBall(int p_ball_number){
+    balls.erase(p_ball_number);
+};
+
 void BallManager::render(RenderWindow& p_window)
 {
     for (auto& pair : balls) {
