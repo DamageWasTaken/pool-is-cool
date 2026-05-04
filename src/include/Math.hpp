@@ -56,10 +56,19 @@ struct Edge{
 		end.print();
 	}
 
+    bool operator==(Edge other_edge){
+        return start.x == other_edge.start.x && start.y == other_edge.start.y
+                    && end.x == other_edge.end.x   && end.y == other_edge.end.y;
+    }
+
+    bool operator!=(Edge other_edge){
+        return !(*this == other_edge);
+    }
+
 	Vector2f start, end;
 };
 
-Vector2f rotateVector2f(Vector2f v1, float rotation);
+Vector2f rotateVector2f(Vector2f v1, float degrees);
 
 Vector2f anticlockwiseVector2f(Vector2f v1);
 
@@ -89,3 +98,4 @@ float angleBetweenVector2f(Vector2f v1, Vector2f v2);
 
 float crossVector2f(Vector2f v1, Vector2f v2);
 
+bool edgeCollision(Edge edge1, Edge edge2);

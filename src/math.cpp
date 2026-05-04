@@ -84,3 +84,15 @@ float crossVector2f(Vector2f v1, Vector2f v2)
     return v1.x * v2.y - v1.y * v2.x;
 }
 
+bool edgeCollision(Edge edge1, Edge edge2){
+    Vector2f path1 = subtractVector2f(edge1.end, edge1.start);
+    Vector2f path2 = subtractVector2f(edge2.end, edge2.start);
+    float denom = crossVector2f(path1, path2);
+    if (std::fabs(denom) < 1e-9f) return false;
+
+    Vector2f between = subtractVector2f(edge2.start, edge1.start);
+    float t = crossVector2f(between, path2) / denom;
+    float u = crossVector2f(between, path1) / denom;
+
+    return (t >= 0.f && t <= 1.f && u >= 0.f && u <= 1.f);
+}

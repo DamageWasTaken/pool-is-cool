@@ -51,7 +51,7 @@ void RenderWindow::render(float p_x, float p_y, SDL_Texture* p_tex)
 }
 
 void RenderWindow::renderArea(Area& area) {
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
 
     for (Edge& edge : area.edges) {
         SDL_RenderLine(
