@@ -251,6 +251,10 @@ int main( int argc, char *argv[] )
 
     while(game_running)
     {
+        for(int i = 0; i < 16; i++){
+            Vector2f ball_center = ball_manager.getBall(i).getPosition();
+            std::cout << "Ball " << i << " in area: " << inArea(tabel_area, ball_center) << std::endl;
+        };
         last_tick = current_tick;
         current_tick = SDL_GetPerformanceCounter();
         delta_time_test = (double)((current_tick - last_tick)*1000 / (double)SDL_GetPerformanceFrequency() );

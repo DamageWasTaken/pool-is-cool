@@ -27,6 +27,11 @@ class Ball {
         {
             return velocity;
         }
+
+        float get_mass(){
+            return mass;
+        }
+
         void setPosition(Vector2f new_position)
         {
             position = new_position; 
@@ -61,6 +66,7 @@ class Ball {
         {
             diameter = new_diameter;
         }
+         
 
     private:
         SDL_Texture* texture;
@@ -70,6 +76,7 @@ class Ball {
         Vector2f velocity;
         int effect_state;
         float diameter = 25.0f;
+        float mass = std::powf(radius, 2)*M_PI;
 };
 
 class BallManager {
