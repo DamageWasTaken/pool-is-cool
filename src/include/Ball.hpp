@@ -5,7 +5,6 @@
 #include <unordered_map>
 
 #include "Math.hpp"
-#define MINIMAL_VELOCITY 5.f
 
 class TextureManager;
 class RenderWindow;
@@ -85,8 +84,8 @@ class BallManager {
         {
             return balls.size();
         };
-        void state_change(int p_state); 
-        //Changes all balls at once to next state or a given state
+        void setBallVelocities(Vector2f velocity); //Changes all ball velocities to a given velocity
+        void state_change(int p_state); //Changes all balls at once to next state or a given state
   
     private:
         std::unordered_map<int, Ball> balls;
@@ -98,18 +97,10 @@ class BallUtils {
     public:
         BallUtils(TextureManager& p_texture_manager, BallManager& p_ball_manager, Vector2f& p_window_size);
         void render(RenderWindow& window);
-        void handleMouseInput(Vector2f mouse);
+        void handleMouseInput(Vector2f mouse, bool mouse_down);
         void setSpin(Vector2f new_spin);
         void initializeBalls(BallManager& ball_manager, Vector2f p_position = Vector2f(790.0f, 360.0f), float spacing = 25.0f);
-        bool ballsMoving()
-        {
-            for (int i = 0; i < s_ball_manager.getBallAmount(); i++)
-            {
-                if (lengthVector2f(s_ball_manager.getBall(i).getVelocity()) > MINIMAL_VELOCITY)
-                    return true;
-            }
-            return false;
-        }
+        bool ballsMoving();
         void updateTexture(const char* texture_name, SDL_Texture* new_texture)
         {
             if (textures.find(texture_name) != textures.end())
@@ -119,30 +110,27 @@ class BallUtils {
                 std::cout << "Texture not found: " << texture_name << std::endl;
             }
         }
-        void updateCue(Vector2f new_position, float new_rotation)
-        {
-            s_cue_position = new_position;
-            s_cue_rotation = new_rotation;
-        }
-        void updateCue(Vector2f new_position)
-        {
-            s_cue_position = new_position;
-        }
-        void updateCue(float new_rotation)
-        {
-            s_cue_rotation = new_rotation;
-        }
-        Vector2f get_cue_position() {
+        void updateCue(Vector2f new_position, float new_rotation);
+        void updateCue(Vector2f new_position);
+        void updateCue(float new_rotation);
+        Vector2f getCuePosition() {
             return s_cue_position;
         }
-        float get_cue_rotation() {
+        float getCueRotation() {
             return s_cue_rotation;
         }
         bool isSpinLocked() {
             return spin_lock;
         }
-        void toggleSpinLock(bool p_state) {
-            spin_lock = p_state;
+        void toggleSpinLock(bool p_state);
+        void ballsStopped();
+        void setInitialMousePosition(Vector2f mouse);
+        Vector2f getInitialMousePos() {
+            return initial_mouse_position;
+        }
+        void setPower(float new_power);
+        float getPower() {
+            return power;
         }
     private:
         TextureManager& s_texture_manager;
@@ -156,4 +144,5 @@ class BallUtils {
         float s_cue_rotation; // In degrees, 0 is default orientation, so right
         float power = 0.0f; // 0-100
         bool spin_lock = false;
+        bool balls_stopped = true;
 };
