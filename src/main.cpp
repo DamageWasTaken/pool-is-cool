@@ -149,7 +149,7 @@ void update()
         //Find the cueball
         ball_utils.updateCue(cueball_position);
 
-        physics_handler.updatePhysics(frame_time); 
+        //physics_handler.updatePhysics(frame_time); 
         break;
 
     case PAUSED:
@@ -183,7 +183,9 @@ bool input(SDL_Event event, Vector2f mouse, bool mouse_clicked)
     case PLAYING:
         // Check input while playing
 
-        ball_utils.updateCue(cue_rotation);
+        if (!ball_utils.isSpinLocked()) {
+            ball_utils.updateCue(cue_rotation);
+        }
 
         if (mouse_down)
         {
@@ -196,6 +198,7 @@ bool input(SDL_Event event, Vector2f mouse, bool mouse_clicked)
             if (event.key.key == SDLK_R)
             {
                 ball_utils.setSpin(Vector2f(0.0f, 0.0f));
+                ball_utils.toggleSpinLock(false);
             }
         }
 

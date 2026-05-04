@@ -17,7 +17,7 @@ class RenderWindow {
         void renderCenter(float x, float y, SDL_Texture* p_tex);
         void renderCenter(float x, float y, SDL_Texture* p_tex, float scale);
         void renderRotated(float x, float y, SDL_Texture* p_tex, float angle, Vector2f rotation_point);
-        void renderMasked(float x, float y, SDL_Texture* p_tex, SDL_Texture* p_mask, float scale = 1.0f, Vector2f mask_offset = Vector2f(0.0f, 0.0f));
+        void renderClipped(float x, float y, SDL_Texture* p_tex, SDL_FRect clip_rect, float scale);
         void cleanUp();
         void clear();
         void display();

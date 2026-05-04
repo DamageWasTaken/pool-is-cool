@@ -157,10 +157,27 @@ void RenderWindow::renderRotated(float x, float y, SDL_Texture* p_tex, float ang
 	SDL_RenderTextureRotated(renderer, p_tex, &src, &dst, angle, &point, SDL_FLIP_NONE);
 }
 
-void RenderWindow::renderMasked(float x, float y, SDL_Texture* p_tex, SDL_Texture* p_mask, float scale, Vector2f mask_offset)
+//Only renders a portion of the texture
+void RenderWindow::renderClipped(float p_x, float p_y, SDL_Texture* p_tex, SDL_FRect clip_rect, float scale)
 {
+	Vector2f texture_size;
+	SDL_GetTextureSize(p_tex, &texture_size.x, &texture_size.y);
+
+	SDL_FRect src;
+	src.x = clip_rect.x;
+	src.y = clip_rect.y;
+	src.w = clip_rect.w;
+	src.h = clip_rect.h;
+
 	
 
+	SDL_FRect dst;
+	dst.x = p_x;
+	dst.y = p_y;
+	dst.w = clip_rect.w * scale;
+	dst.h = clip_rect.h * scale;
+
+	SDL_RenderTexture(renderer, p_tex, &src, &dst);
 }
 
 void RenderWindow::scaleToScreen()
