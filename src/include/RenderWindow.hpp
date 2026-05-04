@@ -3,6 +3,7 @@
 #include <SDL3_image/SDL_image.h>
 
 #include "Math.hpp"
+#include "Area.hpp"
 #include "Ball.hpp"
 
 class RenderWindow {
@@ -12,6 +13,7 @@ class RenderWindow {
         SDL_Texture* loadTexture(const char* p_filePath);
         void render(float x, float y, SDL_Texture* p_tex);
         void render(Ball& ball, SDL_Texture* p_shadow_texture, SDL_Texture* p_shine_texture);
+        void renderArea(Area& area);
         void renderCenter(float x, float y, SDL_Texture* p_tex);
         void renderCenter(float x, float y, SDL_Texture* p_tex, float scale);
         void renderRotated(float x, float y, SDL_Texture* p_tex, float angle, Vector2f rotation_point);

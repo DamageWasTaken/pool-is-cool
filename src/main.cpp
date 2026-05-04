@@ -50,13 +50,34 @@ static TextureManager texture_manager(window);
 static BallManager ball_manager(texture_manager);
 
 static std::vector<Vector2f> area_corners = {
-    Vector2f(0,0), 
-    Vector2f(width, 0),
-    Vector2f(width, height),
-    Vector2f(0, height)
+    Vector2f(33, 159),
+    Vector2f(67, 129),
+    Vector2f(105, 166),
+    Vector2f(510, 164),
+    Vector2f(523, 122),
+    Vector2f(553, 122),
+    Vector2f(572, 166),
+    Vector2f(974, 163),
+    Vector2f(1008, 130),
+    Vector2f(1043, 167),
+    Vector2f(1012, 197),
+    Vector2f(1012, 523),
+    Vector2f(1040, 551),
+    Vector2f(1005, 586),
+    Vector2f(979, 557),
+    Vector2f(571, 557),
+    Vector2f(556, 596),
+    Vector2f(523, 595),
+    Vector2f(509, 560),
+    Vector2f(107, 557),
+    Vector2f(64, 590),
+    Vector2f(36, 553),
+    Vector2f(69, 522),
+    Vector2f(70, 202)
 };
 
 static Area tabel_area(area_corners);
+
 
 static BallUtils ball_utils(texture_manager, ball_manager, window_size);
 
@@ -89,11 +110,13 @@ void graphics()
     case PLAYING:
         // Render game
         
+        window.renderArea(tabel_area);
         window.renderCenter(table_center.x, table_center.y, texture_manager.get("pool_table"));
         
         ball_manager.render(window);
-        
+
         ball_utils.render(window);
+
         
         break;
 
@@ -167,6 +190,7 @@ bool input(SDL_Event event, Vector2f mouse, bool mouse_clicked)
         if (mouse_down)
         {
             ball_utils.handleMouseInput(mouse);
+            mouse.print();
         }
 
         if (event.type == SDL_EVENT_KEY_DOWN)
@@ -203,6 +227,10 @@ int main( int argc, char *argv[] )
 
     ball_utils.initializeBalls(ball_manager, Vector2f(window_size.x*(79.0f/110.0f)+25.0f, window_size.y/2), 25.0f);
     ball_manager.addBall(window_size.x*(1-79.0f/110.0f), window_size.y/2, 0);
+
+    for(int i = 0; i < 16; i++){
+        ball_manager.getBall(i).setVelocity((Vector2f){500.f, 500.f});
+    }
 
     ball_manager.state_change(0);
 
