@@ -1,5 +1,6 @@
 #pragma once
 #include <SDL3/SDL.h>
+#include <SDL3_ttf/SDL_ttf.h>
 #include <SDL3_image/SDL_image.h>
 
 #include "Math.hpp"
@@ -18,6 +19,8 @@ class RenderWindow {
         void renderCenter(float x, float y, SDL_Texture* p_tex, float scale);
         void renderRotated(float x, float y, SDL_Texture* p_tex, float angle, Vector2f rotation_point);
         void renderClipped(float x, float y, SDL_Texture* p_tex, SDL_FRect clip_rect, float scale);
+        void renderText(float x, float y, const char* p_text, TTF_Font* p_font, SDL_Color p_color);
+        void renderTextCenter(float x, float y, const char* p_text, TTF_Font* p_font, SDL_Color p_color);
         void cleanUp();
         void clear();
         void display();

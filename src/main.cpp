@@ -12,6 +12,7 @@
 #include "Ball.hpp"
 #include "Area.hpp"
 #include "Utils.hpp"
+#include "Font.hpp"
 
 #define EFFECT_CHANGE_RATE 1.0f
 #define POWER_DIVDER 2
@@ -50,6 +51,8 @@ static float height = window.getWindowSize().y;
 static TextureManager texture_manager(window);
 
 static BallManager ball_manager(texture_manager);
+
+static FontManager font_manager("res/font/8-BIT.ttf");
 
 static std::vector<Vector2f> area_corners = {
     Vector2f(33, 159),
@@ -92,7 +95,7 @@ static double delta_time_test = 0;
 
 static bool game_running = true;
 
-static int game_state = PLAYING;
+static int game_state = MENU;
 
 void graphics()
 {
@@ -105,6 +108,11 @@ void graphics()
     {
     case MENU:
         // Render menu
+
+        window.renderTextCenter(screen_size.x/2,100, "Pool", font_manager.get(32), SDL_Color{255, 255, 255, 255});
+        window.renderText(100,screen_size.y/2-100, "Start Game", font_manager.get(20), SDL_Color{255, 255, 255, 255});
+        window.renderText(100,screen_size.y/2, "Highscores", font_manager.get(20), SDL_Color{255, 255, 255, 255});
+        window.renderText(100,screen_size.y/2+100, "Exit", font_manager.get(20), SDL_Color{255, 255, 255, 255});
 
         break;
 
@@ -192,7 +200,11 @@ bool input(SDL_Event event, Vector2f mouse, bool mouse_down)
     {
     case MENU:
         // Check input on menu
-
+        if (mouse_clicked)
+        {
+            game_state = PLAYING;
+        }
+        
         break;
         
     case PLAYING:
@@ -330,6 +342,7 @@ int main( int argc, char *argv[] )
     }
 
     window.cleanUp();
+    font_manager.cleanUp();
     SDL_Quit();
     TTF_Quit();
 

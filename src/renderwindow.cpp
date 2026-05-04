@@ -1,5 +1,6 @@
 #include <iostream>
 #include <SDL3/SDL.h>
+#include <SDL3_ttf/SDL_ttf.h>
 #include <SDL3_image/SDL_image.h>
 
 #include "RenderWindow.hpp"
@@ -194,6 +195,46 @@ void RenderWindow::scaleToScreen()
 		SDL_SetWindowBordered(window, false);
 		SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
 	}
+}
+
+void RenderWindow::renderText(float x, float y, const char* p_text, TTF_Font* p_font, SDL_Color p_color) 
+{
+	SDL_Surface* surface = TTF_RenderText_Blended(p_font, p_text, 0, p_color);
+	if (!surface) {
+		std::cout << "Failed to create text surface: " << SDL_GetError() << std::endl;
+		return;
+	}
+
+	SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+	SDL_DestroySurface(surface);
+
+	if (!texture) {
+		std::cout << "Failed to create text texture: " << SDL_GetError() << std::endl;
+		return;
+	}
+
+	render(x, y, texture);
+	SDL_DestroyTexture(texture);
+}
+
+void RenderWindow::renderTextCenter(float x, float y, const char* p_text, TTF_Font* p_font, SDL_Color p_color) 
+{
+	SDL_Surface* surface = TTF_RenderText_Blended(p_font, p_text, 0, p_color);
+	if (!surface) {
+		std::cout << "Failed to create text surface: " << SDL_GetError() << std::endl;
+		return;
+	}
+
+	SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+	SDL_DestroySurface(surface);
+
+	if (!texture) {
+		std::cout << "Failed to create text texture: " << SDL_GetError() << std::endl;
+		return;
+	}
+
+	renderCenter(x, y, texture);
+	SDL_DestroyTexture(texture);
 }
 
 void RenderWindow::cleanUp()
