@@ -14,6 +14,8 @@
 #include "Utils.hpp"
 
 #define EFFECT_CHANGE_RATE 1.0f
+#define POWER_DIVDER 2
+#define POWER_MULTIPLIER 20.0f
 
 static Vector2f window_size = Vector2f(1080, 720);
 
@@ -150,7 +152,14 @@ void update()
         //Find the cueball
         ball_utils.updateCue(cueball_position);
 
-        physics_handler.updatePhysics(frame_time); 
+        physics_handler.updatePhysics(frame_time);
+
+        if (!ball_utils.ballsMoving())
+        {
+            ball_utils.ballsStopped();
+        }
+        
+
         break;
 
     case PAUSED:
@@ -163,15 +172,20 @@ void update()
     }
 }
 
-bool input(SDL_Event event, Vector2f mouse, bool mouse_clicked)
+bool input(SDL_Event event, Vector2f mouse, bool mouse_down)
 {
-    bool mouse_down = false;
-    float cue_rotation = SDL_atan2f(mouse.y - ball_utils.get_cue_position().y, mouse.x - ball_utils.get_cue_position().x) * 180 / M_PI - 180.0f;
+    bool mouse_clicked = false;
+    float cue_rotation = SDL_atan2f(mouse.y - ball_utils.getCuePosition().y, mouse.x - ball_utils.getCuePosition().x) * 180 / M_PI - 180.0f;
 
-    if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN)
+    if (event.button.button == SDL_BUTTON_LEFT && event.type == SDL_EVENT_MOUSE_BUTTON_DOWN && !mouse_down)
     {
         mouse_down = true;
         mouse_clicked = true;
+    }
+
+    if (event.button.button == SDL_BUTTON_LEFT && event.type == SDL_EVENT_MOUSE_BUTTON_UP)
+    {
+        mouse_down = false;
     }
 
     switch (game_state)
@@ -188,16 +202,10 @@ bool input(SDL_Event event, Vector2f mouse, bool mouse_clicked)
             ball_utils.updateCue(cue_rotation);
         }
 
-        if (mouse_down)
+        if (mouse_clicked)
         {
-            ball_utils.handleMouseInput(mouse);
-            mouse.print();
-
-            if(!ball_utils.ballsMoving()){
-                float power = 500;
-                Vector2f shot_vel = scaleVector2f(rotateVector2f(Vector2f(1, 0), ball_utils.get_cue_rotation()), power); 
-                ball_manager.getBall(0).setVelocity(shot_vel);
-            };
+            ball_utils.setInitialMousePosition(mouse);
+            ball_utils.handleMouseInput(mouse, mouse_down);
         }
 
         if (event.type == SDL_EVENT_KEY_DOWN)
@@ -208,6 +216,18 @@ bool input(SDL_Event event, Vector2f mouse, bool mouse_clicked)
                 ball_utils.toggleSpinLock(false);
             }
         }
+
+        if (mouse_down)
+        {
+            ball_utils.handleMouseInput(mouse, mouse_down);
+        }
+
+        if(!ball_utils.ballsMoving() && ball_utils.isSpinLocked() && ball_utils.getPower() > 5.0f && !mouse_down){
+            float power = ball_utils.getPower() * POWER_MULTIPLIER;
+            Vector2f shot_vel = scaleVector2f(rotateVector2f(Vector2f(1, 0), ball_utils.getCueRotation()), power); 
+            ball_manager.getBall(0).setVelocity(shot_vel);
+            ball_utils.toggleSpinLock(false);
+        };
 
         break;
 
@@ -220,7 +240,10 @@ bool input(SDL_Event event, Vector2f mouse, bool mouse_clicked)
         break;
     }
 
-    return mouse_clicked;
+    
+    
+
+    return mouse_down;
 }
 
 int main( int argc, char *argv[] ) 
@@ -235,7 +258,6 @@ int main( int argc, char *argv[] )
     ball_utils.initializeBalls(ball_manager, Vector2f(window_size.x*(79.0f/110.0f)+25.0f, window_size.y/2), 25.0f);
     ball_manager.addBall(window_size.x*(1-79.0f/110.0f), window_size.y/2, 0);
 
-
     ball_manager.state_change(0);
 
     int window_refresh_rate = window.getRefreshRate();
@@ -246,6 +268,8 @@ int main( int argc, char *argv[] )
     float accumulator = 0.0f;
     float effect_accumulator = 0.0f;
     float current_time = utils::hireTimeInSeconds();
+        
+    bool mouse_down = false;
 
     while(game_running)
     {
@@ -273,8 +297,6 @@ int main( int argc, char *argv[] )
 
         while (accumulator >= delta_time)
         {
-            bool mouse_clicked = false;
-
             Vector2f mouse;
             SDL_GetMouseState(&mouse.x, &mouse.y);
 
@@ -284,7 +306,7 @@ int main( int argc, char *argv[] )
                 {
                     game_running = false;
                 }
-                mouse_clicked = input(event, mouse, mouse_clicked);
+                mouse_down = input(event, mouse, mouse_down);
             }
             accumulator -= delta_time;
         }

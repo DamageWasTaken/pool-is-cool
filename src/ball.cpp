@@ -10,6 +10,9 @@
 #include "RenderWindow.hpp"
 
 #define BALL_AMOUNT 15
+#define POWER_DIVDER 3
+#define POWER_MULTIPLIER 20.0f
+#define MINIMAL_VELOCITY 5.0f
 #define DEFAULT_BALL "ball_cue_-1"
 #define DEFAULT_DOT "ball_dot"
 #define DEFAULT_CUE "pool_cue"
@@ -77,6 +80,14 @@ void BallManager::render(RenderWindow& p_window)
         ball.render(p_window, s_texture_manager);
     }
 }
+
+void BallManager::setBallVelocities(Vector2f velocity)
+{
+    for (auto& pair : balls) {
+        Ball& ball = pair.second;
+        ball.setVelocity(velocity);
+    }
+}
       
 void BallManager::state_change(int p_state = -1)
 {
@@ -116,7 +127,58 @@ void BallUtils::render(RenderWindow& p_window)
     p_window.renderRotated(s_cue_position.x - cue_size.x - ball_width, s_cue_position.y - cue_size.y/2, textures["cue_texture"], s_cue_rotation, Vector2f(cue_size.x+ball_width, cue_size.y/2));
 }
 
-void BallUtils::handleMouseInput(Vector2f mouse)
+bool BallUtils::ballsMoving()
+{
+    for (int i = 0; i < s_ball_manager.getBallAmount(); i++)
+    {
+        if (lengthVector2f(s_ball_manager.getBall(i).getVelocity()) > MINIMAL_VELOCITY) {
+            balls_stopped = false;
+            return true;
+        }
+    }
+    return false;
+}
+
+void BallUtils::setSpin(Vector2f new_spin)
+{
+    spinOffset = new_spin;
+}
+
+void BallUtils::updateCue(Vector2f new_position, float new_rotation)
+{
+    s_cue_position = new_position;
+    s_cue_rotation = new_rotation;
+}
+void BallUtils::updateCue(Vector2f new_position)
+{
+    s_cue_position = new_position;
+}
+void BallUtils::updateCue(float new_rotation)
+{
+    s_cue_rotation = new_rotation;
+}
+
+void BallUtils::toggleSpinLock(bool p_state) {
+    spin_lock = p_state;
+}
+
+void BallUtils::ballsStopped() {
+    if (!balls_stopped) {
+        balls_stopped = true;
+        s_ball_manager.setBallVelocities(Vector2f(0.0f, 0.0f));
+        power = 0.0f;
+    }
+}
+
+void BallUtils::setInitialMousePosition(Vector2f mouse) {
+    initial_mouse_position = mouse;
+}
+
+void BallUtils::setPower(float new_power) {
+    power = std::min(new_power, 100.0f);
+}
+
+void BallUtils::handleMouseInput(Vector2f mouse, bool mouse_down)
 {
     float max_offset = 21.0f;
     float distance_to_center = lengthVector2f(subtractVector2f(mouse, Vector2f(window_size.x - utils_border_buffer.x, utils_border_buffer.y)));
@@ -128,17 +190,13 @@ void BallUtils::handleMouseInput(Vector2f mouse)
     if (!ballsMoving() && !spin_lock)
     {
         spin_lock = true;
-    } else if (spin_lock && !ballsMoving())
-    {
-        spin_lock = false;
     }
-}
+    if (mouse_down && spin_lock)
+    {
+        setPower(lengthVector2f(Vector2f(abs(mouse.x - initial_mouse_position.x)/POWER_DIVDER, abs(mouse.y - initial_mouse_position.y)/POWER_DIVDER)));
+    }
 
-void BallUtils::setSpin(Vector2f new_spin)
-{
-    spinOffset = new_spin;
 }
-
 
 void BallUtils::initializeBalls(BallManager& ball_manager, Vector2f p_position, float spacing)
 {
