@@ -109,7 +109,6 @@ void graphics()
     case PLAYING:
         // Render game
         
-        window.renderArea(tabel_area);
         window.renderCenter(table_center.x, table_center.y, texture_manager.get("pool_table"));
         
         ball_manager.render(window);
@@ -117,7 +116,9 @@ void graphics()
         if(!ball_utils.ballsMoving()){
             ball_utils.render(window);
         }
+
         
+        window.renderArea(tabel_area);
         break;
 
     case PAUSED:
@@ -234,9 +235,6 @@ int main( int argc, char *argv[] )
     ball_utils.initializeBalls(ball_manager, Vector2f(window_size.x*(79.0f/110.0f)+25.0f, window_size.y/2), 25.0f);
     ball_manager.addBall(window_size.x*(1-79.0f/110.0f), window_size.y/2, 0);
 
-    for(int i = 0; i < 16; i++){
-        ball_manager.getBall(i).setVelocity((Vector2f){500.f, 500.f});
-    }
 
     ball_manager.state_change(0);
 

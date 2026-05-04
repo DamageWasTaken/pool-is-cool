@@ -40,10 +40,9 @@ void PhysicsHandler::handleWallCollision(Ball& ball, float timestep) {
         for (Edge edge : area.edges) {
             if (checkWallCollision(ball, edge, timestep) && edge != last_edge) {
                 Vector2f wall = subtractVector2f(edge.end, edge.start);
-                Vector2f normal = normalizeVector2f(clockwiseVector2f(wall));
                 Vector2f toBall = subtractVector2f(ball.getPosition(), edge.start);
+                Vector2f normal = normalizeVector2f(projectVector2f(toBall, clockwiseVector2f(wall)));
                 //remove from wall
-                normal = flipVector2f(normal);
                 float dist = dotVector2f(toBall, normal);
                 float penetration = ball.getRadius() - dist;
                 ball.setPosition(addVector2f(ball.getPosition(), scaleVector2f(normal, penetration*2.f)));
