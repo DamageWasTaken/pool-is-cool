@@ -78,7 +78,7 @@ class BallManager {
         void render(RenderWindow& p_window);
         Ball& getBall(int p_ball_number)
         {
-             return balls.at(p_ball_number);
+            return balls.at(p_ball_number);
         };
         int getBallAmount()
         {
@@ -100,6 +100,15 @@ class BallUtils {
         void handleMouseInput(Vector2f mouse);
         void setSpin(Vector2f new_spin);
         void initializeBalls(BallManager& ball_manager, Vector2f p_position = Vector2f(790.0f, 360.0f), float spacing = 25.0f);
+        bool ballsMoving()
+        {
+            for (int i = 0; i < s_ball_manager.getBallAmount(); i++)
+            {
+                if (lengthVector2f(s_ball_manager.getBall(i).getVelocity()) > 0.01f)
+                    return true;
+            }
+            return false;
+        }
         void updateTexture(const char* texture_name, SDL_Texture* new_texture)
         {
             if (textures.find(texture_name) != textures.end())
@@ -128,14 +137,22 @@ class BallUtils {
         float get_cue_rotation() {
             return s_cue_rotation;
         }
-
+        bool isSpinLocked() {
+            return spin_lock;
+        }
+        void toggleSpinLock(bool p_state) {
+            spin_lock = p_state;
+        }
     private:
+        TextureManager& s_texture_manager;
+        BallManager& s_ball_manager;
+        std::unordered_map<std::string, SDL_Texture*> textures;
         Vector2f spinOffset;
         Vector2 utils_border_buffer = Vector2(30, 30);
         Vector2f& window_size;
-        TextureManager& s_texture_manager;
-        std::unordered_map<std::string, SDL_Texture*> textures;
+        Vector2f initial_mouse_position;
         Vector2f s_cue_position; // This is expresed as position of the tip
-        float s_cue_rotation; // In degrees, 0 is default orientation so right
-        BallManager& s_ball_manager;
+        float s_cue_rotation; // In degrees, 0 is default orientation, so right
+        float power = 0.0f; // 0-100
+        bool spin_lock = false;
 };

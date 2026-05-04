@@ -82,7 +82,7 @@ void BallManager::state_change(int p_state = -1)
 {
     for (auto& pair : balls) {
         Ball& ball = pair.second;
-        ball.change_state(p_state);
+        ball.change_state(p_state); 
     }
 }
 
@@ -94,7 +94,7 @@ BallUtils::BallUtils(TextureManager& p_texture_manager, BallManager& p_ball_mana
     textures.insert({"ball_texture", s_texture_manager.get(DEFAULT_BALL)});
     textures.insert({"cue_texture", s_texture_manager.get(DEFAULT_CUE)});
     textures.insert({"power_texture", s_texture_manager.get(DEFAULT_POWER)});
-    textures.insert({"power_mask_texture", s_texture_manager.get("cue_power_mask")});
+    textures.insert({"power_meter_texture", s_texture_manager.get("power_meter")});
 }
 
 void BallUtils::render(RenderWindow& p_window)
@@ -105,7 +105,13 @@ void BallUtils::render(RenderWindow& p_window)
     p_window.renderCenter(position.x, position.y, textures["ball_texture"], 2);
     p_window.renderCenter(position.x+spinOffset.x, position.y+spinOffset.y, textures["spin_marker"], 2);
     p_window.renderCenter(position.x-ball_width*1.5f, position.y, textures["power_texture"], 2);
-    p_window.renderCenter(position.x-ball_width*1.5f, position.y, textures["power_mask_texture"], 2);
+    Vector2f power_meter_size = s_texture_manager.getSize("power_meter");
+    SDL_FRect clip_rect;
+    clip_rect.x = 0.0f;
+    clip_rect.y = 0.0f;
+    clip_rect.w = power_meter_size.x;
+    clip_rect.h = round(power_meter_size.y*(power/100.0f));
+    p_window.renderClipped(position.x-ball_width*2.0f-power_meter_size.x, position.y - power_meter_size.y+(power_meter_size.y-clip_rect.h)*2, textures["power_meter_texture"], clip_rect, 2);
     Vector2f cue_size = s_texture_manager.getSize("pool_cue");
     p_window.renderRotated(s_cue_position.x - cue_size.x - ball_width, s_cue_position.y - cue_size.y/2, textures["cue_texture"], s_cue_rotation, Vector2f(cue_size.x+ball_width, cue_size.y/2));
 }
@@ -117,6 +123,14 @@ void BallUtils::handleMouseInput(Vector2f mouse)
     if (distance_to_center <= max_offset)
     {
         spinOffset = subtractVector2f(mouse, Vector2f(window_size.x - utils_border_buffer.x, utils_border_buffer.y));
+    }
+
+    if (!ballsMoving() && !spin_lock)
+    {
+        spin_lock = true;
+    } else if (spin_lock && !ballsMoving())
+    {
+        spin_lock = false;
     }
 }
 
