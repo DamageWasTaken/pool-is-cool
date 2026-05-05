@@ -79,25 +79,28 @@ void BallManager::removeBall(int p_ball_number){
 
 void BallManager::render(RenderWindow& p_window)
 {
-    for (auto& pair : balls) {
-        Ball& ball = pair.second;
+    for (auto it  = balls.begin(); it != balls.end();) {
+        Ball& ball = it->second;
         ball.render(p_window, s_texture_manager);
+        ++it;
     }
 }
 
 void BallManager::setBallVelocities(Vector2f velocity)
 {
-    for (auto& pair : balls) {
-        Ball& ball = pair.second;
+    for (auto it = balls.begin(); it != balls.end();) {
+        Ball& ball = it->second;
         ball.setVelocity(velocity);
+        ++it;
     }
 }
       
 void BallManager::state_change(int p_state = -1)
 {
-    for (auto& pair : balls) {
-        Ball& ball = pair.second;
-        ball.change_state(p_state); 
+    for (auto it = balls.begin(); it != balls.end();) {
+        Ball& ball = it->second;
+        ball.change_state(p_state);
+        ++it;
     }
 }
 
