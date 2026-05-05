@@ -173,11 +173,12 @@ void graphics()
             ball_utils.render(window);
         }
 
-        
+       /*
         window.renderArea(tabel_area);
         for(Area hole : holes){
             window.renderArea(hole);
         }
+      */
         break;
 
     case PAUSED:
@@ -208,7 +209,6 @@ void update()
                 } else {
                     //Other ball put, remove from game
                     ball_manager.removeBall(it->first);
-                    it = balls.erase(it);
                 }
             }
             ++it;

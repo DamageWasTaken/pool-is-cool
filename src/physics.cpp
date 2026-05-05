@@ -52,6 +52,7 @@ void PhysicsHandler::solveWallCollision(Ball& ball, Edge edge){
     Vector2f vel = ball.getVelocity();
     float velDot = dotVector2f(vel, normal);
     if (velDot < 0.0f)
+        //reflect velocity
         ball.setVelocity(subtractVector2f(vel, scaleVector2f(normal, 2.0f * velDot)));
 }
 
