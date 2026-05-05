@@ -4,14 +4,6 @@
 
 #include "Area.hpp"
 
-/*class Quadtree {
-    public:
-        Quadtree();
-        Quadtree& getChild(int child){return Quadtree();}
-    private:
-        std::vector<Quadtree> children;
-};*/
-
 class PhysicsHandler {
     public:
         PhysicsHandler(BallManager& _balls, Area _area);
@@ -19,12 +11,14 @@ class PhysicsHandler {
         void updatePhysics(float timestep);
 
     private:
-        //Quadtree search_tree;
         void updateVelocity(Ball& ball, float timestep);
         void updatePosition(Ball& ball, float timestep);
 
         bool checkWallCollision(Ball& ball, Edge edge, float timestep);
         void handleWallCollision(Ball& ball, float timestep);
+
+        void solveWallCollision(Ball& ball, Edge edge);
+        void solveCornerCollision(Ball& ball, Edge edge, Edge edge);
             
         bool checkBallCollision(Ball& ball1, Ball& ball2, float timestep);
         void handleBallCollision(Ball& ball, float timestep);

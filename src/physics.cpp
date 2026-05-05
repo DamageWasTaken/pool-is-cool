@@ -33,18 +33,81 @@ bool PhysicsHandler::checkWallCollision(Ball& ball, Edge edge, float timestep){
     return (t >= 0.f && t <= 1.f && u >= 0.f && u <= 1.f);
 }
 
+/*
+Vector2f wall = subtractVector2f(edge.end, edge.start);
+                Vector2f toBall = subtractVector2f(ball.getPosition(), edge.start);
+                Vector2f normal = normalizeVector2f(projectVector2f(toBall, clockwiseVector2f(wall)));
+                float dist = dotVector2f(toBall, normal);
+                float penetration = ball.getRadius() - dist;
+                if (penetration <= 0.0f) continue;
+                ball.setPosition(addVector2f(ball.getPosition(), scaleVector2f(normal, penetration)));
+                Vector2f vel = ball.getVelocity();
+                float velDot = dotVector2f(vel, normal);
+                if (velDot < 0.0f)
+                    ball.setVelocity(subtractVector2f(vel, scaleVector2f(normal, 2.0f * velDot)));
+                handled_edges.push_back(edge);
+*/
+
+void solveWallCollision(Ball& ball, Edge edge){
+    Vector2f wall = subtractVector2f(edge.end, edge.start);
+    Vector2f toBall = subtractVector2f(ball.getPosition(), edge.start);
+    Vector2f normal = normalizeVector2f(projectVector2f(toBall, clockwiseVector2f(wall)));
+    float dist = dotVector2f(toBall, normal);
+    float penetration = ball.getRadius() - dist;
+    if (penetration <= 0.0f) continue;
+    ball.setPosition(addVector2f(ball.getPosition(), scaleVector2f(normal, penetration)));
+    Vector2f vel = ball.getVelocity();
+    float velDot = dotVector2f(vel, normal);
+    if (velDot < 0.0f)
+        ball.setVelocity(subtractVector2f(vel, scaleVector2f(normal, 2.0f * velDot)));
+}
+
+void solveCornerCollision(Ball& ball, Edge edge, Edge edge){
+
+}
+
+int getIndex(auto element; std::vector<auto> vector){
+    for(int i = 0; i < vector.size(); i++){
+        if(vector[i] == element){
+            return i;
+        }
+    }
+    return -1;
+}
+
+Edge findAdjecentEdge(Edge edge, std::vector<Edge> edges){
+    int index = getIndex(edge, area.edges);
+    Edge right = index+1 == area.edges.size() ? area.edges[0] : area.edges[index+1] ;
+    Edge left = index == 0 ? area.edges[area.edges.size()-1] : area.edges[index-1] ;
+    if(getIndex(right, edges) != -1){
+        return right; 
+    } else if(getIndex(left, edges) != -1){
+        return left;
+    }     
+    return Edge();
+}
+
 void PhysicsHandler::handleWallCollision(Ball& ball, float timestep) {
-    Edge last_edge = Edge();
+    std::vector<Edge> colliding_edges = {};
     for (Edge edge : area.edges) {
-        if (checkWallCollision(ball, edge, timestep) && edge != last_edge) {
-            Vector2f wall = subtractVector2f(edge.end, edge.start);
-            Vector2f toBall = subtractVector2f(ball.getPosition(), edge.start);
-            Vector2f normal = normalizeVector2f(projectVector2f(toBall, clockwiseVector2f(wall)));
-            Vector2f vel = ball.getVelocity();
-            float velDot = dotVector2f(vel, normal);
-            if (velDot < 0.0f)
-                ball.setVelocity(subtractVector2f(vel, scaleVector2f(normal, 2.0f * velDot)));
-            last_edge = edge;
+        if (checkWallCollision(ball, edge, timestep)) {
+            colliding_edges.push_back(edge);
+        }
+    }
+    if(colliding_edges.size() == 1){
+        solveWallCollision(Ball, colliding_edges[0]);
+        return
+    } else if (colliding_edges.size() > 1){
+        while(colliding_edges.size != 0){
+            for(Edge edge : colliding_edges){
+                Edge adjecentEdge = findAdjecentEdge();
+                if(adjecentEdge != Edge()){
+                    solveCornerCollision(ball, edge, adjecentEdge);
+                } else {
+                    solveWallCollision(ball, edge);
+                }
+                break
+            }
         }
     }
 }
