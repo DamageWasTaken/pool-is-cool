@@ -198,10 +198,20 @@ void update()
 
     //Check Puts
     for(Area hole : holes){
-        for(auto it = ball_manager.getBalls().begin(); it!=ball_manager.getBalls().end(); it++){
+        std::unordered_map<int, Ball> balls = ball_manager.getBalls();
+        for(auto it = balls.begin(); it!=balls.end();){
             if(inArea(hole, it->second.getPosition())){
-                ball_manager.removeBall(it->first);
+                if (it->first == 0) {
+                    //Cueball put, reset position and velocity
+                    ball_manager.getBall(0).setPosition(Vector2f(window_size.x*(1-79.0f/110.0f), window_size.y/2));
+                    ball_manager.getBall(0).setVelocity(Vector2f(0.0f, 0.0f));
+                } else {
+                    //Other ball put, remove from game
+                    ball_manager.removeBall(it->first);
+                    it = balls.erase(it);
+                }
             }
+            ++it;
         }
     }
 
@@ -286,8 +296,9 @@ bool input(SDL_Event event, Vector2f mouse, bool mouse_down)
             {
                 ball_utils.setSpin(Vector2f(0.0f, 0.0f));
                 ball_utils.toggleSpinLock(false);
-            } else if (event.key.key == SDLK_SPACE){
-                std::cout << std::endl;
+            } 
+            if (event.key.key == SDLK_H){
+                ball_manager.getBall(0).setPosition(Vector2f(390.0f, 360.0f));
             }
         }
 

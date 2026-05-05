@@ -89,7 +89,11 @@ class BallManager {
         void render(RenderWindow& p_window);
         Ball& getBall(int p_ball_number)
         {
-            return balls.at(p_ball_number);
+            if (balls.find(p_ball_number) != balls.end())
+            {
+                return balls.at(p_ball_number);
+            }
+            return balls.at(0); // Return a default ball if not found
         };
         int getBallAmount()
         {

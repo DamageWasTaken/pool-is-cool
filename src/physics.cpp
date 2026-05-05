@@ -9,8 +9,8 @@
 
 #define FRICTION 0.99f
 
-PhysicsHandler::PhysicsHandler(BallManager& _balls, Area _area) 
-: balls(_balls), area(_area)
+PhysicsHandler::PhysicsHandler(BallManager& _s_ball_manager, Area _area) 
+: s_ball_manager(_s_ball_manager), area(_area)
 {
 }
 
@@ -53,10 +53,15 @@ bool PhysicsHandler::checkBallCollision(Ball& ball1, Ball& ball2, float timestep
     return lengthVector2f(subtractVector2f(ball2.getPosition(), ball1.getPosition())) <= ball1.getRadius()+ball2.getRadius();
 }
 
-void PhysicsHandler::handleBallCollision(Ball& ball, float timestep){
-    for(int i = 0; i < balls.getBallAmount(); i++){
-        Ball& other_ball = balls.getBall(i);
-        if(&other_ball == &ball) continue; // skip self
+void PhysicsHandler::handleBallCollision(Ball& ball, int ball_number, float timestep){
+    std::unordered_map<int, Ball> balls = s_ball_manager.getBalls();
+    for(auto it = balls.begin(); it!=balls.end();){
+        int other_ball_number = it->first;
+        if(other_ball_number == ball_number) {
+            ++it;
+            continue; // skip self
+        };
+        Ball& other_ball = s_ball_manager.getBall(other_ball_number);
         if(checkBallCollision(ball, other_ball, timestep)){
             Vector2f seperation = subtractVector2f(ball.getPosition(), other_ball.getPosition());
             Vector2f normal = normalizeVector2f(seperation);
@@ -99,27 +104,32 @@ void PhysicsHandler::handleBallCollision(Ball& ball, float timestep){
                     )
                 )
             );
-        handleWallCollision(ball, timestep);
+            handleWallCollision(ball, timestep);
         }
+        ++it;
     }
 }
 
-void PhysicsHandler::updateVelocity(Ball& ball, float timestep){
-    ball.setVelocity(scaleVector2f(ball.getVelocity(), FRICTION));
+void PhysicsHandler::updateVelocity(int ball_number, float timestep){
+    s_ball_manager.getBall(ball_number).setVelocity(scaleVector2f(s_ball_manager.getBall(ball_number).getVelocity(), FRICTION));
+    //ball.setVelocity(scaleVector2f(ball.getVelocity(), FRICTION));
 };
 
-void PhysicsHandler::updatePosition(Ball& ball, float timestep){
-    handleBallCollision(ball, timestep);
+void PhysicsHandler::updatePosition(int ball_number, float timestep){
+    Ball& ball = s_ball_manager.getBall(ball_number);
+    handleBallCollision(ball, ball_number, timestep);
     handleWallCollision(ball, timestep);
-    handleBallCollision(ball, timestep);
+    handleBallCollision(ball, ball_number, timestep);
     Vector2f new_position = addVector2f(ball.getPosition(), scaleVector2f(ball.getVelocity(), timestep));
     ball.setPosition(new_position);
 };
 
 void PhysicsHandler::updatePhysics(float timestep){
-      for(auto it = balls.getBalls().begin(); it!=balls.getBalls().end(); it++){
-        Ball& ball = it->second;
-        updateVelocity(ball, timestep);
-        updatePosition(ball, timestep);
+    std::unordered_map<int, Ball> balls = s_ball_manager.getBalls();
+    for(auto it = balls.begin(); it!=balls.end();){
+        int ball_number = it->first;
+        updateVelocity(ball_number, timestep);
+        updatePosition(ball_number, timestep);
+        ++it;
     }
 }

@@ -52,8 +52,13 @@ void RenderWindow::render(float p_x, float p_y, SDL_Texture* p_tex)
 }
 
 void RenderWindow::renderArea(Area& area) {
-    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-
+    if (area.points.size() > 5)
+	{
+		SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+	} else {
+		SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
+	}
+	
     for (Edge& edge : area.edges) {
         SDL_RenderLine(
             renderer,
@@ -63,6 +68,7 @@ void RenderWindow::renderArea(Area& area) {
             (edge.end.y)
         );
     }
+	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 }
 
 //Balls are always rendered from the center
