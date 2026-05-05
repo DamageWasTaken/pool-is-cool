@@ -66,7 +66,7 @@ static std::vector<Vector2f> area_corners = {
     Vector2f(570,556),
     Vector2f(973,556),
     Vector2f(1009,592),
-    Vector2f(1046,550),
+    Vector2f(1046,555),
     Vector2f(1011,520),
     Vector2f(1011,199),
     Vector2f(1046,164),
@@ -124,6 +124,7 @@ void graphics()
         ball_manager.render(window);
 
         if(!ball_utils.ballsMoving()){
+            window.renderTextCenter(100,30, "Next Ball", font_manager.get(16), SDL_Color{255, 255, 255, 255});
             ball_utils.render(window);
         }
 

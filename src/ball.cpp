@@ -125,6 +125,7 @@ void BallUtils::render(RenderWindow& p_window)
     p_window.renderClipped(position.x-ball_width*2.0f-power_meter_size.x, position.y - power_meter_size.y+(power_meter_size.y-clip_rect.h)*2, textures["power_meter_texture"], clip_rect, 2);
     Vector2f cue_size = s_texture_manager.getSize("pool_cue");
     p_window.renderRotated(s_cue_position.x - cue_size.x - ball_width, s_cue_position.y - cue_size.y/2, textures["cue_texture"], s_cue_rotation, Vector2f(cue_size.x+ball_width, cue_size.y/2));
+    p_window.renderCenter(utils_border_buffer.x + 200, utils_border_buffer.y, s_texture_manager.get("ball_1_0"), 2); 
 }
 
 bool BallUtils::ballsMoving()
