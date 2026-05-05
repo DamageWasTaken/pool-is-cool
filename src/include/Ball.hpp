@@ -149,6 +149,13 @@ class BallUtils {
         float getPower() {
             return power;
         }
+        bool cueballAlive(){
+            return cueball_alive;
+        }
+        void setCueballAlive(bool state){//true means it exits, false means that is has been putted
+            cueball_alive = state;
+        }
+    
     private:
         TextureManager& s_texture_manager;
         BallManager& s_ball_manager;
@@ -162,4 +169,5 @@ class BallUtils {
         float power = 0.0f; // 0-100
         bool spin_lock = false;
         bool balls_stopped = true;
+        bool cueball_alive = true;
 };

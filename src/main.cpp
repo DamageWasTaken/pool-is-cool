@@ -195,25 +195,6 @@ void graphics()
 
 void update()
 {
-    Vector2f cueball_position = ball_manager.getBall(0).getPosition();
-
-    //Check Puts
-    for(Area hole : holes){
-        std::unordered_map<int, Ball> balls = ball_manager.getBalls();
-        for(auto it = balls.begin(); it!=balls.end();){
-            if(inArea(hole, it->second.getPosition())){
-                if (it->first == 0) {
-                    //Cueball put, reset position and velocity
-                    ball_manager.getBall(0).setPosition(Vector2f(window_size.x*(1-79.0f/110.0f), window_size.y/2));
-                    ball_manager.getBall(0).setVelocity(Vector2f(0.0f, 0.0f));
-                } else {
-                    //Other ball put, remove from game
-                    ball_manager.removeBall(it->first);
-                }
-            }
-            ++it;
-        }
-    }
 
     switch (game_state)
     {
@@ -224,15 +205,33 @@ void update()
 
     case PLAYING:
         // Update game
+        if(ball_utils.cueballAlive()){
+            Vector2f cueball_position = ball_manager.getBall(0).getPosition();
+            ball_utils.updateCue(cueball_position);
+        };
+
+        //Check Puts
+        for(Area hole : holes){
+            std::unordered_map<int, Ball> balls = ball_manager.getBalls();
+            for(auto it = balls.begin(); it!=balls.end();){
+                if(inArea(hole, it->second.getPosition())){
+                    if (it->first == 0) {
+                        ball_utils.setCueballAlive(false);
+                    } 
+                    ball_manager.removeBall(it->first);
+                }
+                ++it;
+            }
+        }
         
-        //Find the cueball
-        ball_utils.updateCue(cueball_position);
 
         physics_handler.updatePhysics(frame_time);
 
         if (!ball_utils.ballsMoving())
         {
             ball_utils.ballsStopped();
+            ball_manager.addBall(window_size.x*(1-79.0f/110.0f), window_size.y/2, 0);
+            ball_utils.setCueballAlive(true);
         }
         
 

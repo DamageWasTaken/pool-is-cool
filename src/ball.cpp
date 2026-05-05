@@ -137,12 +137,13 @@ void BallUtils::render(RenderWindow& p_window)
 
 bool BallUtils::ballsMoving()
 {
-    for (int i = 0; i < s_ball_manager.getBallAmount(); i++)
-    {
-        if (lengthVector2f(s_ball_manager.getBall(i).getVelocity()) > MINIMAL_VELOCITY) {
+    std::unordered_map<int, Ball> balls = s_ball_manager.getBalls();
+    for(auto it = balls.begin(); it!=balls.end();){
+        if (lengthVector2f(it->second.getVelocity()) > MINIMAL_VELOCITY) {
             balls_stopped = false;
             return true;
         }
+        it++;
     }
     return false;
 }
@@ -173,6 +174,10 @@ void BallUtils::toggleSpinLock(bool p_state) {
 void BallUtils::ballsStopped() {
     if (!balls_stopped) {
         balls_stopped = true;
+        if(!cueball_alive){
+            s_ball_manager.addBall(window_size.x*(1-79.0f/110.0f), window_size.y/2, 0);
+            cueball_alive = true;
+        };
         s_ball_manager.setBallVelocities(Vector2f(0.0f, 0.0f));
         power = 0.0f;
     }
