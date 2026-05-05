@@ -155,7 +155,16 @@ class BallUtils {
         void setCueballAlive(bool state){//true means it exits, false means that is has been putted
             cueball_alive = state;
         }
-    
+        int getShots() {
+            return shots;
+        }
+        void incrementShots() {
+            shots++;
+        }
+        void setShots(int new_shots) {
+            shots = new_shots;
+        }
+
     private:
         TextureManager& s_texture_manager;
         BallManager& s_ball_manager;
@@ -170,4 +179,5 @@ class BallUtils {
         bool spin_lock = false;
         bool balls_stopped = true;
         bool cueball_alive = true;
+        int shots = 0;
 };

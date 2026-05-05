@@ -1,10 +1,10 @@
+!pool-game-windows.zip
 *.exe
 build/
 .vscode/
 *.nix
 exclude/
 external/
-release/
 build-windows/
 build-windows.sh
 CMakelists.txt

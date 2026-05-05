@@ -14,5 +14,6 @@ namespace utils {
 enum GameState {
     MENU = 0,
     PLAYING = 1,
-    PAUSED = 2
+    PAUSED = 2,
+    END = 3
 };

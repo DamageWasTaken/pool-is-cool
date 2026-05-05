@@ -150,6 +150,8 @@ void graphics()
 
     const Vector2f screen_size = window.getWindowSize();
     const Vector2f table_center = Vector2f(screen_size.x/2, screen_size.y/2);
+    std::string shot_text_str = "Shots: " + std::to_string(ball_utils.getShots());
+    const char* shot_text = shot_text_str.c_str();
 
     switch (game_state)
     {
@@ -172,6 +174,7 @@ void graphics()
 
         if(!ball_utils.ballsMoving()){
             window.renderTextCenter(100,30, "Next Ball", font_manager.get(16), SDL_Color{255, 255, 255, 255});
+            window.renderTextCenter(400,30, shot_text, font_manager.get(16), SDL_Color{255, 255, 255, 255});
             ball_utils.render(window);
         }
 
@@ -187,6 +190,12 @@ void graphics()
         // Render pause screen
 
         break;
+
+    case END:
+        // Render end screen
+
+        window.renderTextCenter(screen_size.x/2,100, "Game Over", font_manager.get(32), SDL_Color{255, 255, 255, 255});
+        window.renderTextCenter(screen_size.x/2,screen_size.y/2, shot_text, font_manager.get(20), SDL_Color{255, 255, 255, 255});
     
     default:
         break;
@@ -221,6 +230,11 @@ void update()
                         ball_utils.setCueballAlive(false);
                     } 
                     ball_manager.removeBall(it->first);
+                    if (ball_manager.getBallAmount() == 1)
+                    {
+                        game_state = END;
+                    }
+                    
                 }
                 ++it;
             }
@@ -313,12 +327,23 @@ bool input(SDL_Event event, Vector2f mouse, bool mouse_down)
             Vector2f shot_vel = scaleVector2f(rotateVector2f(Vector2f(1, 0), ball_utils.getCueRotation()), power); 
             ball_manager.getBall(0).setVelocity(shot_vel);
             ball_utils.toggleSpinLock(false);
+            ball_utils.incrementShots();
         };
 
         break;
 
     case PAUSED:
         // Check input on pause screen
+
+        break;
+
+    case END:
+        // Check input on end screen
+
+        if (mouse_clicked)
+        {
+            game_state = MENU;
+        }
 
         break;
 
