@@ -3,3 +3,9 @@ build/
 .vscode/
 *.nix
 exclude/
+external/
+release/
+build-windows/
+build-windows.sh
+CMakelists.txt
+cmake/

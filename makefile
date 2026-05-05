@@ -20,5 +20,5 @@ windows:
 	rm -rf build/
 	mkdir -p build
 	g++ -g src/*.cpp -o build/main -I src/include/ $(SDL_FLAGS_STATIC)
-	x86_64-w64-mingw32-g++-posix -g src/*.cpp -o build/main.exe --std=c++17 -lm -static-libgcc -static-libstdc++ -lwinpthread -I src/include/ $(SDL_FLAGS_STATIC)
+	./build-windows.sh
 

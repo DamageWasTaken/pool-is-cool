@@ -1,9 +1,11 @@
 #include <iostream>
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
-#include <SDL3_mixer/SDL_mixer.h>
+//#include <SDL3_mixer/SDL_mixer.h>
 #include <SDL3_ttf/SDL_ttf.h>
 #include <cmath>
+#include <ctime>
+#include <filesystem>
 
 #include "Math.hpp"
 #include "RenderWindow.hpp"
@@ -29,10 +31,10 @@ bool init()
 		std::cout << "SDL_Init HAS FAILED: " << SDL_GetError() << std::endl;
         return false;
     }
-    if (!MIX_Init()) {
+    /*if (!MIX_Init()) {
         std::cout << "MIX_Init HAS FAILED: " << SDL_GetError() << std::endl;
         return false;
-    }
+    }*/
     if (!TTF_Init()) {
         std::cout << "TTF_init HAS FAILED: " << SDL_GetError() << std::endl;
         return false;
@@ -333,6 +335,8 @@ bool input(SDL_Event event, Vector2f mouse, bool mouse_down)
 int main( int argc, char *argv[] ) 
 {
     srand(time(NULL));
+
+    std::cout << std::filesystem::current_path() << std::endl;
 
     //Force max window size
     //window.scaleToScreen();
