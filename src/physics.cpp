@@ -35,25 +35,17 @@ bool PhysicsHandler::checkWallCollision(Ball& ball, Edge edge, float timestep){
 
 void PhysicsHandler::handleWallCollision(Ball& ball, float timestep) {
     Edge last_edge = Edge();
-    bool handled = false;
-    while (!handled) {
-        for (Edge edge : area.edges) {
-            if (checkWallCollision(ball, edge, timestep) && edge != last_edge) {
-                Vector2f wall = subtractVector2f(edge.end, edge.start);
-                Vector2f toBall = subtractVector2f(ball.getPosition(), edge.start);
-                Vector2f normal = normalizeVector2f(projectVector2f(toBall, clockwiseVector2f(wall)));
-                //remove from wall
-                float dist = dotVector2f(toBall, normal);
-                float penetration = ball.getRadius() - dist;
-                ball.setPosition(addVector2f(ball.getPosition(), scaleVector2f(normal, penetration*2.f)));
-                Vector2f vel = ball.getVelocity();
-                float velDot = dotVector2f(vel, normal);
+    for (Edge edge : area.edges) {
+        if (checkWallCollision(ball, edge, timestep) && edge != last_edge) {
+            Vector2f wall = subtractVector2f(edge.end, edge.start);
+            Vector2f toBall = subtractVector2f(ball.getPosition(), edge.start);
+            Vector2f normal = normalizeVector2f(projectVector2f(toBall, clockwiseVector2f(wall)));
+            Vector2f vel = ball.getVelocity();
+            float velDot = dotVector2f(vel, normal);
+            if (velDot < 0.0f)
                 ball.setVelocity(subtractVector2f(vel, scaleVector2f(normal, 2.0f * velDot)));
-                last_edge = edge;
-                break;
-            }
+            last_edge = edge;
         }
-        handled = true;
     }
 }
 
@@ -107,6 +99,7 @@ void PhysicsHandler::handleBallCollision(Ball& ball, float timestep){
                     )
                 )
             );
+        handleWallCollision(ball, timestep);
         }
     }
 }
@@ -124,8 +117,8 @@ void PhysicsHandler::updatePosition(Ball& ball, float timestep){
 };
 
 void PhysicsHandler::updatePhysics(float timestep){
-    for(int i = 0; i < balls.getBallAmount(); i++){
-        Ball& ball = balls.getBall(i);
+      for(auto it = balls.getBalls().begin(); it!=balls.getBalls().end(); it++){
+        Ball& ball = it->second;
         updateVelocity(ball, timestep);
         updatePosition(ball, timestep);
     }
