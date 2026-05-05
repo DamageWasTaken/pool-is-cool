@@ -87,7 +87,7 @@ void PhysicsHandler::handleBallCollision(Ball& ball, int ball_number, float time
                         dotVector2f(
                             subtractVector2f(ball_vel, other_ball_vel), 
                             seperation
-                        ) / std::powf(lengthVector2f(seperation), 2)
+                        ) / std::pow(lengthVector2f(seperation), 2)
                     )
                 )
             );
@@ -100,7 +100,7 @@ void PhysicsHandler::handleBallCollision(Ball& ball, int ball_number, float time
                         dotVector2f(
                             subtractVector2f(other_ball_vel, ball_vel), 
                             flipVector2f(seperation)
-                        ) / std::powf(lengthVector2f(seperation), 2)
+                        ) / std::pow(lengthVector2f(seperation), 2)
                     )
                 )
             );

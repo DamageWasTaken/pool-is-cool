@@ -2,10 +2,12 @@
 
 #include "Math.hpp"
 
+constexpr float PI = 3.14159265358979323846f;
+
 Vector2f rotateVector2f(Vector2f v1, float degrees){
-    float radians = degrees * (M_PI/180.f);
-    return Vector2f(v1.x*std::cosf(radians) - v1.y*std::sinf(radians), 
-                    v1.x*std::sinf(radians) + v1.y*std::cosf(radians));
+    float radians = degrees * (PI/180.f);
+    return Vector2f(v1.x*std::cos(radians) - v1.y*std::sin(radians), 
+                    v1.x*std::sin(radians) + v1.y*std::cos(radians));
 };
 
 Vector2f clockwiseVector2f(Vector2f v1){
@@ -20,7 +22,7 @@ Vector2f flipVector2f(Vector2f v1){
 }
 
 Vector2f projectVector2f(Vector2f v1, Vector2f v2){
-    return scaleVector2f(v2, dotVector2f(v1, v2)/std::powf(lengthVector2f(v2), 2));
+    return scaleVector2f(v2, dotVector2f(v1, v2)/std::pow(lengthVector2f(v2), 2));
 }
 
 Vector2f resizeVector2f(Vector2f v1, float size){

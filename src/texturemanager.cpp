@@ -5,6 +5,7 @@
 #include "RenderWindow.hpp"
 
 #include <filesystem>
+#include <iomanip>
 
 TextureManager::TextureManager(RenderWindow& window)
 {

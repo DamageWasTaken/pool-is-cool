@@ -9,6 +9,8 @@
 class TextureManager;
 class RenderWindow;
 
+constexpr float PI = 3.14159265358979323846f;
+
 class Ball {
     public:
         Ball(TextureManager& p_texture_manager, float p_x, float p_y, std::string p_texture_name);
@@ -75,7 +77,7 @@ class Ball {
         Vector2f velocity;
         int effect_state;
         float diameter = 25.0f;
-        float mass = std::powf(radius, 2)*M_PI;
+        float mass = std::pow(radius, 2)*PI;
 };
 
 class BallManager {

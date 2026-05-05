@@ -251,7 +251,7 @@ void update()
 bool input(SDL_Event event, Vector2f mouse, bool mouse_down)
 {
     bool mouse_clicked = false;
-    float cue_rotation = SDL_atan2f(mouse.y - ball_utils.getCuePosition().y, mouse.x - ball_utils.getCuePosition().x) * 180 / M_PI - 180.0f;
+    float cue_rotation = SDL_atan2f(mouse.y - ball_utils.getCuePosition().y, mouse.x - ball_utils.getCuePosition().x) * 180 / PI - 180.0f;
 
     if (event.button.button == SDL_BUTTON_LEFT && event.type == SDL_EVENT_MOUSE_BUTTON_DOWN && !mouse_down)
     {
