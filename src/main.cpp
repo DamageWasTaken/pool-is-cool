@@ -58,46 +58,48 @@ static FontManager font_manager("res/font/8-BIT.ttf");
 
 static std::vector<Area> holes = {
     Area(std::vector<Vector2f>{
-        Vector2f(56, 187),
-        Vector2f(34, 161),
-        Vector2f(68, 133),
-        Vector2f(92, 153),
-        Vector2f(84, 178)
+        Vector2f(32, 164),
+        Vector2f(69, 127),
+        Vector2f(91, 149),
+        Vector2f(83, 177),
+        Vector2f(54, 186)
     }),
     Area(std::vector<Vector2f>{
-        Vector2f(518, 145),
-        Vector2f(522, 125),
-        Vector2f(555, 123),
-        Vector2f(564, 142),
-        Vector2f(541, 160)
+        Vector2f(32, 555),
+        Vector2f(69, 592),
+        Vector2f(91, 570),
+        Vector2f(83, 542),
+        Vector2f(54, 533)
     }),
     Area(std::vector<Vector2f>{
-        Vector2f(987, 153),
-        Vector2f(1011, 135),
-        Vector2f(1044, 166),
-        Vector2f(1024, 185),
-        Vector2f(995, 177)
+        Vector2f(524, 603),
+        Vector2f(555, 603),
+        Vector2f(564, 577),
+        Vector2f(546, 561),
+        Vector2f(533, 561),
+        Vector2f(515, 577)
     }),
     Area(std::vector<Vector2f>{
-        Vector2f(1025, 536),
-        Vector2f(1039, 550),
-        Vector2f(1007, 583),
-        Vector2f(989, 571),
-        Vector2f(1000, 543)
+        Vector2f(997, 543),
+        Vector2f(988, 571),
+        Vector2f(1009, 592),
+        Vector2f(1046, 555),
+        Vector2f(1025, 534)
     }),
     Area(std::vector<Vector2f>{
-        Vector2f(562, 578),
-        Vector2f(558, 597),
-        Vector2f(520, 597),
-        Vector2f(516, 579),
-        Vector2f(540, 564)
+        Vector2f(996, 177),
+        Vector2f(1024, 186),
+        Vector2f(1046, 164),
+        Vector2f(1009, 127),
+        Vector2f(987, 149)
     }),
     Area(std::vector<Vector2f>{
-        Vector2f(92, 568),
-        Vector2f(64, 590),
-        Vector2f(38, 553),
-        Vector2f(57, 537),
-        Vector2f(83, 546)
+        Vector2f(546, 158),
+        Vector2f(533, 158),
+        Vector2f(515, 142),
+        Vector2f(524, 117),
+        Vector2f(555, 117),
+        Vector2f(564, 142)
     })
 };
 
@@ -178,12 +180,13 @@ void graphics()
             ball_utils.render(window);
         }
 
-       /*
+        /*
         window.renderArea(tabel_area);
         for(Area hole : holes){
             window.renderArea(hole);
         }
-      */
+        */
+      
         break;
 
     case PAUSED:
@@ -226,10 +229,15 @@ void update()
             std::unordered_map<int, Ball> balls = ball_manager.getBalls();
             for(auto it = balls.begin(); it!=balls.end();){
                 if(inArea(hole, it->second.getPosition())){
-                    if (it->first == 0) {
+                    if (it->first == 0 && ball_utils.cueballAlive()) {
+                        ball_manager.getBall(0).setVelocity(Vector2f(0.0f, 0.0f));
+                        ball_manager.getBall(0).setPosition(Vector2f(0, 0));
                         ball_utils.setCueballAlive(false);
-                    } 
-                    ball_manager.removeBall(it->first);
+                        ball_utils.incrementShots();
+                    } else {
+                        ball_manager.removeBall(it->first);
+                        ball_utils.ballPutted(it->first);
+                    }
                     if (ball_manager.getBallAmount() == 1)
                     {
                         game_state = END;
@@ -246,8 +254,6 @@ void update()
         if (!ball_utils.ballsMoving())
         {
             ball_utils.ballsStopped();
-            ball_manager.addBall(window_size.x*(1-79.0f/110.0f), window_size.y/2, 0);
-            ball_utils.setCueballAlive(true);
         }
         
 
@@ -302,7 +308,7 @@ bool input(SDL_Event event, Vector2f mouse, bool mouse_down)
         {
             ball_utils.setInitialMousePosition(mouse);
             ball_utils.handleMouseInput(mouse, mouse_down);
-            mouse.print();
+            //mouse.print();
         }
 
         if (event.type == SDL_EVENT_KEY_DOWN)

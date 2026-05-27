@@ -52,7 +52,7 @@ void RenderWindow::render(float p_x, float p_y, SDL_Texture* p_tex)
 }
 
 void RenderWindow::renderArea(Area& area) {
-    if (area.points.size() > 5)
+    if (area.points.size() > 6)
 	{
 		SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
 	} else {

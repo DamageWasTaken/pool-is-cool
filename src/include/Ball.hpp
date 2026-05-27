@@ -97,6 +97,10 @@ class BallManager {
             }
             return balls.at(0); // Return a default ball if not found
         };
+        bool ballExists(int p_ball_number)
+        {
+            return balls.find(p_ball_number) != balls.end();
+        }
         int getBallAmount()
         {
             return balls.size();
@@ -152,9 +156,7 @@ class BallUtils {
         bool cueballAlive(){
             return cueball_alive;
         }
-        void setCueballAlive(bool state){//true means it exits, false means that is has been putted
-            cueball_alive = state;
-        }
+        void setCueballAlive(bool state);
         int getShots() {
             return shots;
         }
@@ -164,7 +166,10 @@ class BallUtils {
         void setShots(int new_shots) {
             shots = new_shots;
         }
-
+        void ballPutted(int ball_number);
+        void setBreakShot(bool state) {
+            break_shot = state;
+        }
     private:
         TextureManager& s_texture_manager;
         BallManager& s_ball_manager;
@@ -180,4 +185,6 @@ class BallUtils {
         bool balls_stopped = true;
         bool cueball_alive = true;
         int shots = 0;
+        int next_ball = 1;
+        bool break_shot = true;
 };

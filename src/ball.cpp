@@ -132,7 +132,9 @@ void BallUtils::render(RenderWindow& p_window)
     p_window.renderClipped(position.x-ball_width*2.0f-power_meter_size.x, position.y - power_meter_size.y+(power_meter_size.y-clip_rect.h)*2, textures["power_meter_texture"], clip_rect, 2);
     Vector2f cue_size = s_texture_manager.getSize("pool_cue");
     p_window.renderRotated(s_cue_position.x - cue_size.x - ball_width, s_cue_position.y - cue_size.y/2, textures["cue_texture"], s_cue_rotation, Vector2f(cue_size.x+ball_width, cue_size.y/2));
-    p_window.renderCenter(utils_border_buffer.x + 200, utils_border_buffer.y, s_texture_manager.get("ball_1_0"), 2); 
+    const std::string next_ball_texture_name = "ball_" + std::to_string(next_ball) + "_0";
+    SDL_Texture* next_ball = s_texture_manager.get(next_ball_texture_name);
+    p_window.renderCenter(utils_border_buffer.x + 200, utils_border_buffer.y, next_ball, 2); 
 }
 
 bool BallUtils::ballsMoving()
@@ -173,9 +175,10 @@ void BallUtils::toggleSpinLock(bool p_state) {
 
 void BallUtils::ballsStopped() {
     if (!balls_stopped) {
+        break_shot = false;
         balls_stopped = true;
         if(!cueball_alive){
-            s_ball_manager.addBall(window_size.x*(1-79.0f/110.0f), window_size.y/2, 0);
+            s_ball_manager.getBall(0).setPosition(Vector2f(window_size.x*(1-79.0f/110.0f), window_size.y/2));
             cueball_alive = true;
         };
         s_ball_manager.setBallVelocities(Vector2f(0.0f, 0.0f));
@@ -209,6 +212,10 @@ void BallUtils::handleMouseInput(Vector2f mouse, bool mouse_down)
         setPower(lengthVector2f(Vector2f(abs(mouse.x - initial_mouse_position.x)/POWER_DIVDER, abs(mouse.y - initial_mouse_position.y)/POWER_DIVDER)));
     }
 
+}
+
+void BallUtils::setCueballAlive(bool state) {
+    cueball_alive = state;    
 }
 
 void BallUtils::initializeBalls(BallManager& ball_manager, Vector2f p_position, float spacing)
@@ -288,4 +295,18 @@ void BallUtils::initializeBalls(BallManager& ball_manager, Vector2f p_position, 
         s_x += spacing;
     }
 
+}
+
+void BallUtils::ballPutted(int ball_number) {
+    if (ball_number == next_ball)
+    {
+        int possible_next_ball = next_ball++;
+        while (!s_ball_manager.ballExists(possible_next_ball))
+        {
+            possible_next_ball++;
+        }
+        next_ball = possible_next_ball;
+    } else if (!break_shot) {
+        shots++;
+    }
 }
