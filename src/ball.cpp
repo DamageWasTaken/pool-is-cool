@@ -19,12 +19,14 @@
 #define DEFAULT_POWER "cue_power"
 
 Ball::Ball(TextureManager& p_texture_manager, float p_x, float p_y, std::string p_texture_name)
-    :position(p_x, p_y), rotation_state(0)
+    :position(p_x, p_y)
 {
-    std::string texture_name = p_texture_name + "_" + std::to_string(rotation_state);
-    texture = p_texture_manager.get(texture_name);
+    std::string texture_name = p_texture_name + "_";
+    texture_front = p_texture_manager.get(texture_name + "0");
+    texture_back = p_texture_manager.get(texture_name + "-1");
     effect_state = rand() % 4;
     radius = 12.5; 
+    flip_distance = PI*radius;
 }
 
 void Ball::print(){

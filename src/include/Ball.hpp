@@ -18,7 +18,9 @@ class Ball {
         void render(RenderWindow& window, TextureManager& p_texture_manager);
         SDL_Texture* getTexture()
         {
-            return texture;
+            if (flipped)
+                return texture_back;
+            return texture_front;
         }
         Vector2f getPosition()
         {
@@ -35,6 +37,14 @@ class Ball {
 
         void setPosition(Vector2f new_position)
         {
+            float distance_traveled_increment = lengthVector2f(subtractVector2f(new_position, position));
+            distance_traveled += distance_traveled_increment;
+            if (distance_traveled >= flip_distance)
+            {
+                distance_traveled -= flip_distance;
+                flipped = !flipped;
+            }
+            
             position = new_position; 
         }
 
@@ -70,14 +80,17 @@ class Ball {
          
 
     private:
-        SDL_Texture* texture;
+        SDL_Texture* texture_front;
+        SDL_Texture* texture_back;
         float radius;
         Vector2f position;
-        int rotation_state;
         Vector2f velocity;
         int effect_state;
         float diameter = 25.0f;
         float mass = std::pow(radius, 2)*PI;
+        float distance_traveled = 0.0f;
+        float flip_distance;
+        bool flipped = false;
 };
 
 class BallManager {
